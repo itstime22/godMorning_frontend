@@ -24,21 +24,26 @@ function OtherRoutineScreen() {
 
   const Todo_list = todos[TodoId].todo_list;
 
-  ///heart
-  let countHeart = 0;
-  let countScrap = 0;
+  const [heartCount, addHeart] = useState(0);
+  const [scrapCount, addScrap] = useState(0);
+
   const [scraped, setScraped] = useState(false);
   const [hearted, setHearted] = useState(false);
 
-  const addScrap = () => {
+  const letScrap = () => {
     setScraped(!scraped);
-    countScrap++;
-    console.log("scrap: ", scraped);
+    if (scraped) {
+      addScrap(scrapCount++);
+      console.log("scrap: ", scrapCount);
+    }
   };
-  const addHeart = () => {
+
+  const letHeart = () => {
     setHearted(!hearted);
-    countHeart++;
-    console.log("heart: ", countHeart);
+    if (hearted) {
+      addHeart(heartCount++);
+      console.log("heart: ", heartCount);
+    }
   };
 
   const [hoursRange, setHoursRange] = useState({
@@ -69,7 +74,7 @@ function OtherRoutineScreen() {
         <FontAwesome onPress={() => goBack()} name="angle-left" size={40} />
         <Text style={styles.title}>{todos[TodoId].title}</Text>
 
-        <TouchableOpacity onPress={addScrap}>
+        <TouchableOpacity onPress={letScrap}>
           {scraped ? (
             <FontAwesome name="bookmark" size={30} color="black" />
           ) : (
@@ -92,7 +97,7 @@ function OtherRoutineScreen() {
               <TimePick key={item.id} item={item} />
             ))}
           </View>
-          <TouchableOpacity onPress={addHeart}>
+          <TouchableOpacity onPress={letHeart}>
             {hearted ? (
               <FontAwesome name="heart" size={30} color="rgb(255, 127, 127)" />
             ) : (

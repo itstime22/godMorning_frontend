@@ -9,6 +9,7 @@ import {
 import todos from "../../assets/data/todos";
 import { useNavigation } from "@react-navigation/native";
 import RoutineButton from "../components/RoutineButton";
+import closestIndexTo from "date-fns/fp/closestIndexTo/index";
 
 function HomeScreen() {
   const navigation = useNavigation();
@@ -29,9 +30,24 @@ function HomeScreen() {
 
   const [times, setTimes] = useState(timeTable);
 
+  const [timeTodos, setTimeTodos] = useState(
+    todos.filter((routine) => routine.timezone1.charAt(0) == timeId)
+  );
+
+  useEffect(() => {
+    setTimeTodos(
+      todos.filter(
+        (routine) =>
+          routine.timezone1.charAt(0) == timeId ||
+          routine.timezone1.substring(0, 2) == timeId
+      )
+    );
+    console.log(timeTodos);
+  }, [times]);
+
   const ontimePress = (index) => {
     setTimeId(index);
-    console.log(timeId);
+
     const newTable = times.map((time) => {
       if (time.id == index) {
         return { ...time, isSelect: true };
@@ -80,25 +96,15 @@ function HomeScreen() {
       <View style={styles.r_container}>
         <ScrollView contentContainerStyle={styles.routine}>
           <View style={styles.column1}>
-            {todos
-              .filter(
-                (routine, index) =>
-                  (routine.timezone1.charAt(0) == timeId ||
-                    routine.timezone1.substring(0, 2) == timeId) &&
-                  index % 2 == 0
-              )
+            {timeTodos
+              .filter((routine, index) => index % 2 == 0)
               .map((routine) => (
                 <RoutineButton routine={routine} key={routine.id} />
               ))}
           </View>
           <View style={styles.column2}>
-            {todos
-              .filter(
-                (routine, index) =>
-                  (routine.timezone1.charAt(0) == timeId ||
-                    routine.timezone1.substring(0, 2) == timeId) &&
-                  index % 2 == 1
-              )
+            {timeTodos
+              .filter((routine, index) => index % 2 == 1)
               .map((routine) => (
                 <RoutineButton routine={routine} key={routine.id} />
               ))}
