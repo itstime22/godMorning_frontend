@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,8 +10,7 @@ import todos from "../../assets/data/todos";
 import { useNavigation } from "@react-navigation/native";
 import RoutineButton from "../components/RoutineButton";
 import * as Font from "expo-font";
-import AppLoading from "expo-app-loading";
-import * as SplashScreen from 'expo-splash-screen';
+import * as SplashScreen from "expo-splash-screen";
 
 function HomeScreen() {
   const navigation = useNavigation();
@@ -45,17 +44,7 @@ function HomeScreen() {
     setTimes(newTable);
   };
 
-  const [isReady, setIsReady] = useState(false);
-
-  const getFonts = async () => {
-    await Font.loadAsync({
-      NanumSquareRoundB: require("../../assets/fonts/NanumSquareRoundB.ttf"),
-      NanumSquareRoundR: require("../../assets/fonts/NanumSquareRoundR.ttf"),
-      Cafe24Ohsquareair: require("../../assets/fonts/Cafe24Ohsquareair.ttf"),
-    });
-  };
-
-  return isReady ? (
+  return (
     <View style={styles.container}>
       <View style={styles.t_container}>
         <ScrollView style={{ flex: 1, paddingLeft: 10 }} horizontal={true}>
@@ -119,13 +108,6 @@ function HomeScreen() {
         </ScrollView>
       </View>
     </View>
-  ) : (
-    // 앱 구성 컴포넌트
-    <AppLoading
-      startAsync={getFonts}
-      onFinish={() => setIsReady(true)}
-      onError={() => {}}
-    />
   );
 }
 

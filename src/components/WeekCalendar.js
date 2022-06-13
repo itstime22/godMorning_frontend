@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { addDays, format, getDate, startOfWeek, isSameDay } from "date-fns";
 import {
   StyleSheet,
@@ -8,7 +8,7 @@ import {
   Dimensions,
 } from "react-native";
 import * as Font from "expo-font";
-import AppLoading from "expo-app-loading";
+import * as SplashScreen from "expo-splash-screen";
 
 const WeekCalendar = ({ date }) => {
   const [week, setWeek] = useState([]);
@@ -36,15 +36,7 @@ const WeekCalendar = ({ date }) => {
     return final;
   };
 
-  const [isReady, setIsReady] = useState(false);
-
-  const getFonts = async () => {
-    await Font.loadAsync({
-      NanumSquareRoundB: require("../../assets/fonts/NanumSquareRoundB.ttf"),
-    });
-  };
-
-  return isReady ? (
+  return (
     <View style={styles.container}>
       {week.map((weekDay) => {
         const textStyles = [styles.dayText];
@@ -71,13 +63,6 @@ const WeekCalendar = ({ date }) => {
         );
       })}
     </View>
-  ) : (
-    // 앱 구성 컴포넌트
-    <AppLoading
-      startAsync={getFonts}
-      onFinish={() => setIsReady(true)}
-      onError={() => {}}
-    />
   );
 };
 

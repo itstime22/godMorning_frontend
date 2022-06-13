@@ -1,35 +1,21 @@
-import { useState } from "react";
-import { Dimensions, StyleSheet, TextInput } from "react-native";
+import { useState, useEffect, useCallback } from "react";
+import { Dimensions, StyleSheet, TextInput, View } from "react-native";
 import * as Font from "expo-font";
-import AppLoading from "expo-app-loading";
+import * as SplashScreen from "expo-splash-screen";
 
 const Input = ({ value, onChangeText, onSubmitEditing }) => {
-  const [isReady, setIsReady] = useState(false);
-
-  const getFonts = async () => {
-    await Font.loadAsync({
-      NanumSquareRoundB: require("../../assets/fonts/NanumSquareRoundB.ttf"),
-      Cafe24Ohsquareair: require("../../assets/fonts/Cafe24Ohsquareair.ttf"),
-    });
-  };
-
-  return isReady ? (
-    <TextInput
-      style={styles.input}
-      placeholder="To do, 시간"
-      maxLength={50}
-      value={value}
-      onChangeText={onChangeText}
-      onSubmitEditing={onSubmitEditing}
-      placeholderTextColor={"gray"}
-    />
-  ) : (
-    // 앱 구성 컴포넌트
-    <AppLoading
-      startAsync={getFonts}
-      onFinish={() => setIsReady(true)}
-      onError={() => {}}
-    />
+  return (
+    <View>
+      <TextInput
+        style={styles.input}
+        placeholder="To do, 시간"
+        maxLength={50}
+        value={value}
+        onChangeText={onChangeText}
+        onSubmitEditing={onSubmitEditing}
+        placeholderTextColor={"gray"}
+      />
+    </View>
   );
 };
 

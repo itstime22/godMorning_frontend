@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View, Pressable } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Font from "expo-font";
-import AppLoading from "expo-app-loading";
+import * as SplashScreen from "expo-splash-screen";
 
 //timezone1: "4:00",
 //timezone2: "7:10",
@@ -40,16 +40,8 @@ const RoutineButton = ({ routine }) => {
   const goTodoPage = () => {
     navigation.navigate("Others", { id });
   };
-  const [isReady, setIsReady] = useState(false);
 
-  const getFonts = async () => {
-    await Font.loadAsync({
-      NanumSquareRoundB: require("../../assets/fonts/NanumSquareRoundB.ttf"),
-      Cafe24Ohsquareair: require("../../assets/fonts/Cafe24Ohsquareair.ttf"),
-    });
-  };
-
-  return isReady ? (
+  return (
     <Pressable style={styles.container} onPress={goTodoPage}>
       <LinearGradient
         // Button Linear Gradient
@@ -81,13 +73,6 @@ const RoutineButton = ({ routine }) => {
         <Text style={styles.routineName}>💚 100</Text>
       </View>
     </Pressable>
-  ) : (
-    // 앱 구성 컴포넌트
-    <AppLoading
-      startAsync={getFonts}
-      onFinish={() => setIsReady(true)}
-      onError={() => {}}
-    />
   );
 };
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   StyleSheet,
   Text,
@@ -14,7 +14,7 @@ import todos from "../../assets/data/todos";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import * as Font from "expo-font";
-import AppLoading from "expo-app-loading";
+import * as SplashScreen from "expo-splash-screen";
 
 function OtherRoutineScreen() {
   const width = useWindowDimensions().width;
@@ -52,83 +52,70 @@ function OtherRoutineScreen() {
     navigation.goBack();
   };
 
-  const [isReady, setIsReady] = useState(false);
+  return (
+      <LinearGradient
+        colors={[
+          "rgba(184, 181, 255, 0.97) ",
+          "rgba(210, 171, 217, 0.85) ",
+          "rgba(248, 204, 187, 0.94) ",
+          "rgba(255, 249, 179, 0.82) ",
+        ]}
+        style={{
+          width: width,
+          height: height,
+          paddingTop: 70,
+          alignItems: "center",
+        }}
+      >
+        <View style={styles.topbar}>
+          <FontAwesome onPress={() => goBack()} name="angle-left" size={40} />
+          <Text style={styles.title}>{todos[TodoId].title}</Text>
 
-  const getFonts = async () => {
-    await Font.loadAsync({
-      NanumSquareRoundB: require("../../assets/fonts/NanumSquareRoundB.ttf"),
-      NanumSquareRoundR: require("../../assets/fonts/NanumSquareRoundR.ttf"),
-      Cafe24Ohsquareair: require("../../assets/fonts/Cafe24Ohsquareair.ttf"),
-    });
-  };
-
-  return isReady ? (
-    <LinearGradient
-      colors={[
-        "rgba(184, 181, 255, 0.97) ",
-        "rgba(210, 171, 217, 0.85) ",
-        "rgba(248, 204, 187, 0.94) ",
-        "rgba(255, 249, 179, 0.82) ",
-      ]}
-      style={{
-        width: width,
-        height: height,
-        paddingTop: 70,
-        alignItems: "center",
-      }}
-    >
-      <View style={styles.topbar}>
-        <FontAwesome onPress={() => goBack()} name="angle-left" size={40} />
-        <Text style={styles.title}>{todos[TodoId].title}</Text>
-
-        <TouchableOpacity onPress={addScrap}>
-          {scraped ? (
-            <FontAwesome name="bookmark" size={30} color="black" />
-          ) : (
-            <FontAwesome name="bookmark" size={30} color="white" />
-          )}
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.userInfo}>
-        <View style={{ flexDirection: "row" }}>
-          <FontAwesome name="user" size={30} />
-          <Text style={styles.user}>게시자</Text>
-        </View>
-
-        <View style={styles.timePick}>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-evenly" }}
-          >
-            {Object.values(hoursRange).map((item) => (
-              <TimePick key={item.id} item={item} />
-            ))}
-          </View>
-          <TouchableOpacity onPress={addHeart}>
-            {hearted ? (
-              <FontAwesome name="heart" size={30} color="rgb(255, 127, 127)" />
+          <TouchableOpacity onPress={addScrap}>
+            {scraped ? (
+              <FontAwesome name="bookmark" size={30} color="black" />
             ) : (
-              <FontAwesome name="heart" size={30} color="white" />
+              <FontAwesome name="bookmark" size={30} color="white" />
             )}
           </TouchableOpacity>
         </View>
-      </View>
 
-      <ScrollView>
-        {Object.values(Todo_list).map((id, index) => (
-          <View style={styles.todocontainer} key={index}>
-            <Text style={styles.content}>{id.content}</Text>
+        <View style={styles.userInfo}>
+          <View style={{ flexDirection: "row" }}>
+            <FontAwesome name="user" size={30} />
+            <Text style={styles.user}>게시자</Text>
           </View>
-        ))}
-      </ScrollView>
-    </LinearGradient>
-  ) : (
-    // 앱 구성 컴포넌트
-    <AppLoading
-      startAsync={getFonts}
-      onFinish={() => setIsReady(true)}
-      onError={() => {}}
-    />
+
+          <View style={styles.timePick}>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-evenly" }}
+            >
+              {Object.values(hoursRange).map((item) => (
+                <TimePick key={item.id} item={item} />
+              ))}
+            </View>
+            <TouchableOpacity onPress={addHeart}>
+              {hearted ? (
+                <FontAwesome
+                  name="heart"
+                  size={30}
+                  color="rgb(255, 127, 127)"
+                />
+              ) : (
+                <FontAwesome name="heart" size={30} color="white" />
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <ScrollView>
+          {Object.values(Todo_list).map((id, index) => (
+            <View style={styles.todocontainer} key={index}>
+              <Text style={styles.content}>{id.content}</Text>
+            </View>
+          ))}
+        </ScrollView>
+      </LinearGradient>
   );
   {
     /*데이터 받아오는거

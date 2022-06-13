@@ -1,20 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 import * as Font from "expo-font";
-import AppLoading from "expo-app-loading";
+import * as SplashScreen from "expo-splash-screen";
 
 const LogoTitle = () => {
-  const [isReady, setIsReady] = useState(false);
-
-  const getFonts = async () => {
-    await Font.loadAsync({
-      NanumSquareRoundB: require("../../assets/fonts/NanumSquareRoundB.ttf"),
-      NanumSquareRoundEB: require("../../assets/fonts/NanumSquareRoundEB.ttf"),
-    });
-  };
-
-  return isReady ? (
-    <>
+  return (
+    <View>
       <View style={styles.container}>
         <Image
           style={{ height: 25, width: 25 }}
@@ -28,14 +19,7 @@ const LogoTitle = () => {
           borderBottomWidth: 1,
         }}
       />
-    </>
-  ) : (
-    // 앱 구성 컴포넌트
-    <AppLoading
-      startAsync={getFonts}
-      onFinish={() => setIsReady(true)}
-      onError={() => {}}
-    />
+    </View>
   );
 };
 

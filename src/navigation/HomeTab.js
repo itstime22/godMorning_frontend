@@ -1,24 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import HomeScreen from "../screens/HomeScreen";
 import PopularScreen from "../screens/PopularScreen";
 import NewScreen from "../screens/NewScreen";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import * as Font from "expo-font";
-import AppLoading from "expo-app-loading";
 
 const HomeTab = createMaterialTopTabNavigator();
 
 const HomeTabNav = () => {
-  const [isReady, setIsReady] = useState(false);
-
-  const getFonts = async () => {
-    await Font.loadAsync({
-      NanumSquareRoundB: require("../../assets/fonts/NanumSquareRoundB.ttf"),
-    });
-  };
-
-  return isReady ? (
+  return (
     <HomeTab.Navigator
       screenOptions={{
         //tabBarActiveTintColor: "white",
@@ -62,13 +52,6 @@ const HomeTabNav = () => {
         }}
       />
     </HomeTab.Navigator>
-  ) : (
-    // 앱 구성 컴포넌트
-    <AppLoading
-      startAsync={getFonts}
-      onFinish={() => setIsReady(true)}
-      onError={() => {}}
-    />
   );
 };
 

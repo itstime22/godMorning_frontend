@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Image, Text, StyleSheet, View, Pressable } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import * as Font from "expo-font";
-import AppLoading from "expo-app-loading";
+import * as SplashScreen from "expo-splash-screen";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -16,15 +16,7 @@ const MyPageScreen = ({ navigation }) => {
     navigation.navigate("Scrap");
   };
 
-  const [isReady, setIsReady] = useState(false);
-
-  const getFonts = async () => {
-    await Font.loadAsync({
-      NanumSquareRoundB: require("../../assets/fonts/NanumSquareRoundB.ttf"),
-    });
-  };
-
-  return isReady ? (
+  return (
     <View
       style={{ flex: 1, paddingTop: inset.top, paddingBottom: inset.bottom }}
     >
@@ -95,13 +87,6 @@ const MyPageScreen = ({ navigation }) => {
         </Pressable>
       </View>
     </View>
-  ) : (
-    // 앱 구성 컴포넌트
-    <AppLoading
-      startAsync={getFonts}
-      onFinish={() => setIsReady(true)}
-      onError={() => {}}
-    />
   );
 };
 

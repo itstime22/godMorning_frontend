@@ -1,29 +1,20 @@
-import { StyleSheet, Text, View, Pressable, Image } from "react-native";
-import React, { useState, useEffect } from "react";
+import { StyleSheet, Text, Pressable, Image, View } from "react-native";
+import React, { useState, useEffect, useCallback } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Font from "expo-font";
-import AppLoading from "expo-app-loading";
+import * as SplashScreen from "expo-splash-screen";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const LoginScreen = ({ navigation }) => {
   const inset = useSafeAreaInsets();
-  console.log(inset);
-  useEffect(() => {}, []);
+  //console.log(inset);
+  //useEffect(() => {}, []);
 
   const login = () => {
     navigation.navigate("BottomTab");
   };
 
-  const [isReady, setIsReady] = useState(false);
-
-  const getFonts = async () => {
-    await Font.loadAsync({
-      NanumSquareRoundB: require("../../assets/fonts/NanumSquareRoundB.ttf"),
-    });
-  };
-
-  return isReady ? (
-    //<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+  return (
     <LinearGradient
       colors={[
         "#9DC0FF",
@@ -71,17 +62,15 @@ const LoginScreen = ({ navigation }) => {
         </Text>
       </Pressable>
     </LinearGradient>
-  ) : (
-    // 앱 구성 컴포넌트
-    <AppLoading
-      startAsync={getFonts}
-      onFinish={() => setIsReady(true)}
-      onError={() => {}}
-    />
   );
 };
 
 const styles = StyleSheet.create({
+  appLoading: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   button: {
     width: 130,
     height: 100,

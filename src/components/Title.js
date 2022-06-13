@@ -1,20 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { StyleSheet, View, TextInput } from "react-native";
 import * as Font from "expo-font";
-import AppLoading from "expo-app-loading";
+import * as SplashScreen from "expo-splash-screen";
 
 const Title = ({ value, onChangeText }) => {
-  const [isReady, setIsReady] = useState(false);
-
-  const getFonts = async () => {
-    await Font.loadAsync({
-      NanumSquareRoundB: require("../../assets/fonts/NanumSquareRoundB.ttf"),
-      Cafe24Ohsquareair: require("../../assets/fonts/Cafe24Ohsquareair.ttf"),
-      
-    });
-  };
-
-  return isReady ? (
+  return (
     <View style={styles.container}>
       <TextInput
         style={styles.title}
@@ -24,13 +14,6 @@ const Title = ({ value, onChangeText }) => {
         onChangeText={onChangeText}
       />
     </View>
-  ) : (
-    // 앱 구성 컴포넌트
-    <AppLoading
-      startAsync={getFonts}
-      onFinish={() => setIsReady(true)}
-      onError={() => {}}
-    />
   );
 };
 
