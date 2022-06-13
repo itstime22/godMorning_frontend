@@ -9,8 +9,6 @@ import {
 import todos from "../../assets/data/todos";
 import { useNavigation } from "@react-navigation/native";
 import RoutineButton from "../components/RoutineButton";
-import * as Font from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
 
 function HomeScreen() {
   const navigation = useNavigation();
