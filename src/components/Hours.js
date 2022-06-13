@@ -8,9 +8,6 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import * as Font from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
-import { useState, useEffect, useCallback } from "react";
 
 const Hours = () => {
   const navigation = useNavigation();

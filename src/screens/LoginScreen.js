@@ -1,8 +1,6 @@
 import { StyleSheet, Text, Pressable, Image, View } from "react-native";
-import React, { useState, useEffect, useCallback } from "react";
+import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import * as Font from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const LoginScreen = ({ navigation }) => {

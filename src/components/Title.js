@@ -1,7 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
 import { StyleSheet, View, TextInput } from "react-native";
-import * as Font from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
 
 const Title = ({ value, onChangeText }) => {
   return (

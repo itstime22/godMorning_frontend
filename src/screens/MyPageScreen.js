@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React from "react";
 import { Image, Text, StyleSheet, View, Pressable } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import * as Font from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 

@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import todos from "../../assets/data/todos";
 import { useNavigation } from "@react-navigation/native";
 import RoutineButton from "../components/RoutineButton";
-import * as Font from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
 
 const MineScreen = () => {
   const navigation = useNavigation();

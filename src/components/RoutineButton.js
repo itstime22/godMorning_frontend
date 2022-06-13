@@ -1,12 +1,7 @@
 import { StyleSheet, Text, View, Pressable } from "react-native";
-import React, { useState, useEffect, useCallback } from "react";
+import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
-import * as Font from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
-
-//timezone1: "4:00",
-//timezone2: "7:10",
 
 const RoutineButton = ({ routine }) => {
   //한사람의 todos 전체받기

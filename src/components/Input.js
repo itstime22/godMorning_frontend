@@ -1,7 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
 import { Dimensions, StyleSheet, TextInput, View } from "react-native";
-import * as Font from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
 
 const Input = ({ value, onChangeText, onSubmitEditing }) => {
   return (

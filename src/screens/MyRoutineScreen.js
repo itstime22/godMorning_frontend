@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { isSameDay, addDays, format, getDate, startOfWeek } from "date-fns";
 import {
   StyleSheet,
@@ -15,8 +15,6 @@ import Title from "../components/Title";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Task from "../components/Task";
 import TimePick from "../components/TimePick";
-import * as Font from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
 import { FontAwesome } from "@expo/vector-icons";
 
 const MyRoutineScreen = () => {
@@ -126,108 +124,108 @@ const MyRoutineScreen = () => {
   };
 
   return (
-      <LinearGradient
-        colors={[
-          "#9DC0FF",
-          "rgba(184, 181, 255, 0.97) ",
-          "rgba(210, 171, 217, 0.85) ",
-          "rgba(248, 204, 187, 0.94) ",
-          "rgba(255, 249, 179, 0.82) ",
-        ]}
-        style={{
-          flex: 1,
-          paddingTop: 140,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        {/*날짜+요일 출력*/}
-        <StatusBar style="dark" />
-        <View style={styles.datepicker}>
-          <Text
-            style={{
-              margin: 10,
-              fontSize: 25,
-              fontFamily: "NanumSquareRoundB",
-            }}
-          >
-            {selectedDate ? printDate() : "No date selected"}
-          </Text>
-          <FontAwesome name="caret-down" size={30} onPress={showDatePicker} />
+    <LinearGradient
+      colors={[
+        "#9DC0FF",
+        "rgba(184, 181, 255, 0.97) ",
+        "rgba(210, 171, 217, 0.85) ",
+        "rgba(248, 204, 187, 0.94) ",
+        "rgba(255, 249, 179, 0.82) ",
+      ]}
+      style={{
+        flex: 1,
+        paddingTop: 140,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      {/*날짜+요일 출력*/}
+      <StatusBar style="dark" />
+      <View style={styles.datepicker}>
+        <Text
+          style={{
+            margin: 10,
+            fontSize: 25,
+            fontFamily: "NanumSquareRoundB",
+          }}
+        >
+          {selectedDate ? printDate() : "No date selected"}
+        </Text>
+        <FontAwesome name="caret-down" size={30} onPress={showDatePicker} />
 
-          <DateTimePickerModal
-            date={selectedDate}
-            isVisible={datePickerVisible}
-            mode="date"
-            display="inline"
-            onConfirm={handleConfirm}
-            onCancel={hideDatePicker}
-          />
+        <DateTimePickerModal
+          date={selectedDate}
+          isVisible={datePickerVisible}
+          mode="date"
+          display="inline"
+          onConfirm={handleConfirm}
+          onCancel={hideDatePicker}
+        />
+      </View>
+
+      {/*week 캘린더*/}
+      <View style={styles.weekpicker}>
+        <View style={styles.weekcontainer}>
+          {week.map((weekDay) => {
+            const textStyles = [styles.dayText];
+            const touchableStyles = [styles.touchableDay];
+            const sameDay = isSameDay(weekDay.date, selectedDate);
+
+            if (sameDay) {
+              textStyles.push(styles.selectedDayText);
+              touchableStyles.push(styles.selectedTouchableDay);
+            }
+            return (
+              <View style={styles.weekDayItems} key={weekDay.formatted}>
+                <Text style={styles.weekDayText}>{weekDay.formatted}</Text>
+
+                <TouchableOpacity
+                  onPress={() => onChange(weekDay.date)}
+                  style={touchableStyles}
+                >
+                  <Text style={textStyles}>{weekDay.day}</Text>
+                </TouchableOpacity>
+              </View>
+            );
+          })}
         </View>
+      </View>
 
-        {/*week 캘린더*/}
-        <View style={styles.weekpicker}>
-          <View style={styles.weekcontainer}>
-            {week.map((weekDay) => {
-              const textStyles = [styles.dayText];
-              const touchableStyles = [styles.touchableDay];
-              const sameDay = isSameDay(weekDay.date, selectedDate);
+      {/*루틴 작성*/}
+      <View style={styles.todo}>
+        <Title value={title} onChangeText={setTitle}></Title>
 
-              if (sameDay) {
-                textStyles.push(styles.selectedDayText);
-                touchableStyles.push(styles.selectedTouchableDay);
-              }
-              return (
-                <View style={styles.weekDayItems} key={weekDay.formatted}>
-                  <Text style={styles.weekDayText}>{weekDay.formatted}</Text>
-
-                  <TouchableOpacity
-                    onPress={() => onChange(weekDay.date)}
-                    style={touchableStyles}
-                  >
-                    <Text style={textStyles}>{weekDay.day}</Text>
-                  </TouchableOpacity>
-                </View>
-              );
-            })}
-          </View>
-        </View>
-
-        {/*루틴 작성*/}
-        <View style={styles.todo}>
-          <Title value={title} onChangeText={setTitle}></Title>
-
-          <View style={[styles.timePick]}>
-            {Object.values(hoursRange).map((item) => (
-              <TimePick key={item.id} item={item} />
-            ))}
-            {/*
+        <View style={[styles.timePick]}>
+          {Object.values(hoursRange).map((item) => (
+            <TimePick key={item.id} item={item} />
+          ))}
+          {/*
           <Button
             title="  재설정"
             onPress={_renewHour}
             style={{ fontSize: 200, fontWeight: '600', marginLeft: 15 }}
           />
            */}
-          </View>
-
-          <Input
-            value={newTask}
-            onChangeText={_handleTextChange}
-            onSubmitEditing={_addTask}
-          />
-          <ScrollView>
-            {Object.values(tasks).map((item) => (
-              <Task
-                key={item.id}
-                item={item}
-                deleteTask={_deleteTask}
-                toggleTask={_toggleTask}
-                updateTask={_updateTask}
-              />
-            ))}
-          </ScrollView>
         </View>
-      </LinearGradient>
+
+        <Input
+          value={newTask}
+          onChangeText={_handleTextChange}
+          onSubmitEditing={_addTask}
+        />
+        <ScrollView>
+          {Object.values(tasks).map((item) => (
+            <Task
+              key={item.id}
+              item={item}
+              deleteTask={_deleteTask}
+              toggleTask={_toggleTask}
+              updateTask={_updateTask}
+            />
+          ))}
+        </ScrollView>
+      </View>
+    </LinearGradient>
   );
 };
 

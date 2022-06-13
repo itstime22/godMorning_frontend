@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { addDays, format, getDate, startOfWeek, isSameDay } from "date-fns";
 import {
   StyleSheet,
@@ -7,8 +7,6 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
-import * as Font from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
 
 const WeekCalendar = ({ date }) => {
   const [week, setWeek] = useState([]);

@@ -1,7 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
-import * as Font from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
 
 const LogoTitle = () => {
   return (
