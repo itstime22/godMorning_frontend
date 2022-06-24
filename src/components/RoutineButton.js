@@ -5,35 +5,46 @@ import { LinearGradient } from "expo-linear-gradient";
 
 const RoutineButton = ({ routine }) => {
   //한사람의 todos 전체받기
+  /*new*/
   const navigation = useNavigation();
   const Title = routine.title;
-  const Timezone1 = routine.timezone1;
-  const Timezone2 = routine.timezone2;
+  const Timezone1 = routine.startTime;
+  const Timezone2 = routine.endTime;
   const Todo_list = routine.Todo_list;
 
   const toSeconds = (time) => {
     const parts = time.split(":");
-    return parts[0] * 3600 + parts[1] * 60;
+
+    return parseInt(parts[0]) * 3600 + parseInt(parts[1]) * 60;
   };
 
   const calculate = () => {
-    const difference = Math.abs(toSeconds(Timezone2) - toSeconds(Timezone1));
+    const difference = Math.abs(
+      toSeconds(routine.startTime) - toSeconds(routine.endTime)
+    );
     const h = Math.floor(difference / 3600);
     const m = Math.floor((difference % 3600) / 60);
+
+    if (isNaN(h) || isNaN(m)) {
+      return `${routine.startTime}시 시작`;
+    }
+
     if (h > 0) {
       if (m == 0) {
         return `${h}시간`;
       }
+
       return `${h}시간 \n ${m}분`;
     } else {
       return `${m}분`;
     }
   };
 
-  const id = routine.id;
+  const post_no = routine.post_no;
 
   const goTodoPage = () => {
-    navigation.navigate("Others", { id });
+    //  console.log(id)
+    navigation.navigate("Others", { post_no });
   };
 
   return (

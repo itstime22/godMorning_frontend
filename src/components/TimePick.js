@@ -6,9 +6,18 @@ const TimePick = ({ item, passingtime }) => {
   const [selectedDate, setSelectedDate] = useState();
   const [datePickerVisible, setDatePickerVisible] = useState(false);
 
+  /*new*/
   const handleConfirm = (hour) => {
     setSelectedDate(hour);
     hideDatePicker();
+    const today = hour.toLocaleTimeString("en-US", {
+      timeStyle: "short",
+    });
+    const currentTime = Object.assign({}, hoursRange);
+    currentTime[id]["text"] = today;
+    //  console.log(currentTime)
+    //currentTime[item.id]['text'] = today
+    setHoursRange(currentTime);
   };
 
   //새로시작

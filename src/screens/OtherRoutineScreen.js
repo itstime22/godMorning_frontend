@@ -13,8 +13,33 @@ import TimePick from "../components/TimePick";
 import todos from "../../assets/data/todos";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
+import axios from "axios";
 
 function OtherRoutineScreen() {
+  const [fettodo, setFetchTodo] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetching = async () => {
+      try {
+        // 요청이 시작 할 때에는 error 와 users 를 초기화하고
+        setError(null);
+        setFetchTodo(null);
+        // loading 상태를 true 로 바꿉니다.
+        setLoading(true);
+        const response = await axios.get(
+          `http://3.38.14.254/newRoutine/list/${route.params?.post_no}`
+        );
+        setFetchTodo(response.data); // 데이터는 response.data 안에 들어있습니다
+      } catch (e) {
+        setError(e);
+      }
+      setLoading(false);
+    };
+    fetching();
+  }, []);
+
   const width = useWindowDimensions().width;
   const height = useWindowDimensions().height;
 
@@ -46,10 +71,10 @@ function OtherRoutineScreen() {
     }
   };
 
-  const [hoursRange, setHoursRange] = useState({
-    1: { id: "1", text: todos[TodoId].timezone1 },
-    2: { id: "2", text: todos[TodoId].timezone2 },
-  });
+  // const [hoursRange, setHoursRange] = useState({
+  //   1: { id: "1", text: todos[TodoId].timezone1 },
+  //   2: { id: "2", text: todos[TodoId].timezone2 },
+  // });
 
   const goBack = () => {
     navigation.goBack();
@@ -70,64 +95,71 @@ function OtherRoutineScreen() {
         alignItems: "center",
       }}
     >
-      <View style={styles.topbar}>
-        <FontAwesome onPress={() => goBack()} name="angle-left" size={40} />
-        <Text style={styles.title}>{todos[TodoId].title}</Text>
+      {fettodo !== null ? (
+        <>
+          <View style={styles.topbar}>
+            <FontAwesome onPress={() => goBack()} name="angle-left" size={40} />
+            <Text style={styles.title}>{todos[TodoId].title}</Text>
 
-        <TouchableOpacity onPress={letScrap}>
-          {scraped ? (
-            <FontAwesome name="bookmark" size={30} color="black" />
-          ) : (
-            <FontAwesome name="bookmark" size={30} color="white" />
-          )}
-        </TouchableOpacity>
-      </View>
+            <TouchableOpacity onPress={letScrap}>
+              {scraped ? (
+                <FontAwesome name="bookmark" size={30} color="black" />
+              ) : (
+                <FontAwesome name="bookmark" size={30} color="white" />
+              )}
+            </TouchableOpacity>
+          </View>
 
-      <View style={styles.userInfo}>
-        <View style={{ flexDirection: "row" }}>
-          <FontAwesome name="user" size={30} />
-          <Text style={styles.user}>게시자</Text>
-        </View>
+          <View style={styles.userInfo}>
+            <View style={{ flexDirection: "row" }}>
+              <FontAwesome name="user" size={30} />
+              <Text style={styles.user}>게시자</Text>
+            </View>
 
-        <View style={styles.timePick}>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-evenly" }}
-          >
-            {Object.values(hoursRange).map((item) => (
+            <View style={styles.timePick}>
+              <View
+                style={{ flexDirection: "row", justifyContent: "space-evenly" }}
+              >
+                <Text style={{ fontSize: 20, color: "white" }}>
+                  {fettodo["startTime"]}
+                </Text>
+                <Text style={{ fontSize: 20, color: "white" }}> ~ </Text>
+                <Text style={{ fontSize: 20, color: "white" }}>
+                  {fettodo["endTime"]}
+                </Text>
+                {/*{Object.values(hoursRange).map((item) => (
               <TimePick key={item.id} item={item} />
-            ))}
+            ))}*/}
+              </View>
+              <TouchableOpacity onPress={letHeart}>
+                {hearted ? (
+                  <FontAwesome
+                    name="heart"
+                    size={30}
+                    color="rgb(255, 127, 127)"
+                  />
+                ) : (
+                  <FontAwesome name="heart" size={30} color="white" />
+                )}
+              </TouchableOpacity>
+            </View>
           </View>
-          <TouchableOpacity onPress={letHeart}>
-            {hearted ? (
-              <FontAwesome name="heart" size={30} color="rgb(255, 127, 127)" />
-            ) : (
-              <FontAwesome name="heart" size={30} color="white" />
-            )}
-          </TouchableOpacity>
-        </View>
-      </View>
 
-      <ScrollView>
-        {Object.values(Todo_list).map((id, index) => (
-          <View style={styles.todocontainer} key={index}>
-            <Text style={styles.content}>{id.content}</Text>
-          </View>
-        ))}
-      </ScrollView>
+          <ScrollView>
+            {Object.values(fettodo["todo_list"]).map((id, index) => (
+              <View style={styles.todocontainer} key={index}>
+                <Text style={styles.content}>{id.content}</Text>
+              </View>
+            ))}
+          </ScrollView>
+        </>
+      ) : (
+        <Text>로딩중</Text>
+      )}
     </LinearGradient>
   );
-  {
-    /*데이터 받아오는거
-     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-     {Todo_list.map((id) => (
-        <Text style={{ fontSize: 30 }}>{id['content']}</Text>
-      ))}
-      <Text>Details Screen</Text>
-    </View>
-  
-  */
-  }
 }
+
 const styles = StyleSheet.create({
   todo: {
     justifyContent: "center",

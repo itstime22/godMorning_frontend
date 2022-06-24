@@ -8,6 +8,7 @@ import {
   ScrollView,
   Dimensions,
   TouchableOpacity,
+  Button,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Input from "../components/Input";
@@ -16,13 +17,17 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Task from "../components/Task";
 import TimePick from "../components/TimePick";
 import { FontAwesome } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+
+const STORAGE_KEY = "@toDos";
 
 const MyRoutineScreen = () => {
   const [newTask, setNewTask] = useState("");
   const [tasks, setTasks] = useState({});
-
-  /*title*/
   const [title, setTitle] = useState("");
+  /*new*/
+  const [todos, setTodos] = useState({});
 
   /*Date*/
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -66,22 +71,69 @@ const MyRoutineScreen = () => {
     setHoursRange(newRange);
   };
 
-  /*task*/
-  const _deleteTask = (id) => {
+  /*AsyncStorage.clear*/
+  const _deleteTask = async (id) => {
     const currentTasks = Object.assign({}, tasks);
     delete currentTasks[id];
     setTasks(currentTasks);
+
+    /*new*/
+    if (
+      typeof todos[today] != "undefined" &&
+      Object.keys(todos[today]["todo_list"]).length != 0
+    ) {
+      const currentTodos = Object.assign({}, todos);
+      //console.log('delete todos ', currentTodos[today]['todo_list'][id])
+      delete currentTodos[today]["todo_list"][id];
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(currentTodos));
+      // console.log('todos', todos[today]['todo_list'])
+    }
   };
-  const _updateTask = (item) => {
-    const currentTasks = Object.assign({}, tasks);
-    currentTasks[item.id] = item;
-    setTasks(currentTasks);
+
+  const _updateTask = async (item) => {
+    /*new*/
+    if (
+      typeof todos[today] != "undefined" &&
+      typeof todos[today]["todo_list"][item.id] !== "undefined"
+    ) {
+      const currentTodos = Object.assign({}, todos);
+      currentTodos[today]["todo_list"][item.id] = item;
+      setTodos[currentTodos];
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(currentTodos));
+      const currentTasks = Object.assign({}, tasks);
+      currentTasks[item.id] = item;
+      setTasks(currentTasks);
+      setChange(!change);
+    } else {
+      const currentTasks = Object.assign({}, tasks);
+      currentTasks[item.id] = item;
+      setTasks(currentTasks);
+    }
   };
-  const _toggleTask = (id) => {
-    const currentTasks = Object.assign({}, tasks);
-    currentTasks[id]["completed"] = !currentTasks[id]["completed"];
-    setTasks(currentTasks);
+
+  /*new*/
+  const [change, setChange] = useState(true);
+
+  const _toggleTask = async (id) => {
+    /*new*/
+    if (
+      typeof todos[today] != "undefined" &&
+      typeof todos[today]["todo_list"][id] !== "undefined"
+    ) {
+      const currentTodos = Object.assign({}, todos);
+      currentTodos[today]["todo_list"][id]["completed"] =
+        !currentTodos[today]["todo_list"][id]["completed"];
+      setTodos[currentTodos];
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(currentTodos));
+
+      setChange(!change);
+    } else {
+      const currentTasks = Object.assign({}, tasks);
+      currentTasks[id]["completed"] = !currentTasks[id]["completed"];
+      setTasks(currentTasks);
+    }
   };
+
   const _addTask = () => {
     const ID = Date.now().toString();
     const newTaskObject = {
@@ -102,8 +154,23 @@ const MyRoutineScreen = () => {
   const [week, setWeek] = useState([]);
   useEffect(() => {
     const weekDays = getWeekDays(selectedDate);
+    /*new*/
     setWeek(weekDays);
-  }, [selectedDate]);
+    //+ 이거 하면 다른날짜 렌더링할때 todo 안보임
+    setTasks({});
+    if (
+      typeof todos[today] != "undefined"
+      // && todos[today]['title'].length != 0
+    ) {
+      setTitle(todos[today]["title"]);
+      // console.log(todos[today]['title'].length)
+      //todo load
+      loadToDos();
+    } else {
+      setTitle("");
+    }
+    loadToDos();
+  }, [selectedDate, change]);
 
   const getWeekDays = (date) => {
     const start = startOfWeek(date, { weekStartsOn: 1 });
@@ -123,10 +190,119 @@ const MyRoutineScreen = () => {
     setSelectedDate(date);
   };
 
+  /*new, post*/
+  const onPost = () => {
+    var step = 0;
+    //todo 개수 구하기
+    const todocount = Object.values(todos[today]["todo_list"]).length;
+    Alert.alert("post");
+
+    //text만 꺼내기
+    var Posttodo = [];
+    for (step; step < todocount; step++) {
+      Posttodo.push({
+        content: Object.values(todos[today]["todo_list"])[step]["text"],
+      });
+    }
+
+    const postType = {
+      id: 1,
+      title: "gahee",
+      create_date: "20220616",
+      startTime: "9",
+      endTime: "11",
+      todo_list: [
+        {
+          content: "post",
+        },
+      ],
+    };
+    const newPost = Object.assign({}, todos[today]);
+
+    newPost["todo_list"] = Posttodo;
+    newPost["id"] = 1;
+    console.log(todos[today]["title"]);
+
+    axios({
+      method: "POST",
+      url: "http://3.38.14.254/routine/create",
+      data: newPost,
+    })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log(error);
+        throw new Error(error);
+      });
+  };
+
+  /*new, 날짜 변환*/
+  const month = selectedDate.toLocaleDateString("en-US", {
+    month: "2-digit",
+  });
+  const day = selectedDate.toLocaleDateString("en-US", {
+    day: "2-digit",
+  });
+  const today = `${month}.${day}`;
+
+  /*new, save*/
+  const onSave = async () => {
+    Alert.alert("Save");
+
+    const saveTodoObject = {
+      [today]: {
+        id: today,
+        title: title,
+        create_date: selectedDate,
+        startTime: hoursRange[1]["text"],
+        endTime: hoursRange[2]["text"],
+        todo_list: tasks,
+      },
+    };
+
+    if (
+      typeof todos[today] != "undefined" &&
+      Object.keys(todos[today]["todo_list"]).length != 0 &&
+      tasks.length !== 0
+    ) {
+      const addTasks = { ...todos[today]["todo_list"], ...tasks };
+      const addTodos = Object.assign({}, todos[today]["todo_list"], addTasks);
+      const newTodos = todos;
+      newTodos[today]["todo_list"] = addTodos;
+      //20220616여기고침
+      newTodos[today]["title"] = title;
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newTodos));
+    } else {
+      const newToDos = Object.assign({}, todos, saveTodoObject);
+      setTodos(newToDos);
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newToDos));
+      // console.log('안에서 맨처음 암것도 없을때 저장 ', newToDos)
+    }
+    setTasks({});
+
+    const renewhours = Object.assign({}, hoursRange);
+
+    renewhours[1]["text"] = "Start";
+    renewhours[2]["text"] = "End";
+
+    setHoursRange(renewhours);
+    //console.log('todos', todos[today]['todo_list'])
+  };
+
+  const loadToDos = async () => {
+    const s = await AsyncStorage.getItem(STORAGE_KEY);
+    //console.log('load todo ', JSON.parse(s))
+    s !== null ? setTodos(JSON.parse(s)) : null;
+  };
+
+  //데이터 전체 지우기
+  //AsyncStorage.clear()
+
   return (
     <LinearGradient
       colors={[
-        "#9DC0FF",
+        //"#9DC0FF",
         "rgba(184, 181, 255, 0.97) ",
         "rgba(210, 171, 217, 0.85) ",
         "rgba(248, 204, 187, 0.94) ",
@@ -191,21 +367,49 @@ const MyRoutineScreen = () => {
         </View>
       </View>
 
-      {/*루틴 작성*/}
+      {/*new*/}
+
       <View style={styles.todo}>
         <Title value={title} onChangeText={setTitle}></Title>
-
+        {/*new*/}
+        <View style={styles.post_save_container}>
+          <Button title="Save" onPress={onSave}></Button>
+          <Button title="Post" onPress={onPost}></Button>
+        </View>
         <View style={[styles.timePick]}>
-          {Object.values(hoursRange).map((item) => (
-            <TimePick key={item.id} item={item} />
-          ))}
-          {/*
-          <Button
-            title="  재설정"
-            onPress={_renewHour}
-            style={{ fontSize: 200, fontWeight: '600', marginLeft: 15 }}
-          />
-           */}
+          {typeof todos[today] == "undefined" ? (
+            Object.values(hoursRange).map((item) => (
+              <>
+                <TimePick
+                  key={item.id}
+                  item={item}
+                  text={item.text}
+                  id={item.id}
+                  setHoursRange={setHoursRange}
+                  hoursRange={hoursRange}
+                />
+              </>
+            ))
+          ) : (
+            <>
+              <TimePick
+                key={1}
+                id={1}
+                text={todos[today]["startTime"]}
+                item={todos[today]["startTime"]}
+                setHoursRange={setHoursRange}
+                hoursRange={hoursRange}
+              />
+              <TimePick
+                key={2}
+                id={2}
+                text={todos[today]["endTime"]}
+                item={todos[today]["endTime"]}
+                setHoursRange={setHoursRange}
+                hoursRange={hoursRange}
+              />
+            </>
+          )}
         </View>
 
         <Input
@@ -214,6 +418,40 @@ const MyRoutineScreen = () => {
           onSubmitEditing={_addTask}
         />
         <ScrollView>
+          {/*new*/}
+          {typeof todos[today] == "undefined" ? (
+            Object.values(tasks).map((item) => (
+              <Task
+                key={item.id}
+                item={item}
+                deleteTask={_deleteTask}
+                toggleTask={_toggleTask}
+                updateTask={_updateTask}
+              />
+            ))
+          ) : (
+            <>
+              {Object.values(todos[today]["todo_list"]).map((item) => (
+                <Task
+                  key={item.id}
+                  item={item}
+                  deleteTask={_deleteTask}
+                  toggleTask={_toggleTask}
+                  updateTask={_updateTask}
+                />
+              ))}
+              {Object.values(tasks).map((item) => (
+                <Task
+                  key={item.id}
+                  item={item}
+                  deleteTask={_deleteTask}
+                  toggleTask={_toggleTask}
+                  updateTask={_updateTask}
+                />
+              ))}
+            </>
+          )}
+          {/*
           {Object.values(tasks).map((item) => (
             <Task
               key={item.id}
@@ -223,6 +461,7 @@ const MyRoutineScreen = () => {
               updateTask={_updateTask}
             />
           ))}
+          */}
         </ScrollView>
       </View>
     </LinearGradient>
@@ -252,11 +491,9 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width - 10,
     alignItems: "flex-start",
     left: 10,
-
     flexDirection: "row",
     //alignItems: 'center',
     //  justifyContent: 'center',
-
     //paddingHorizontal: 17,
     //marginRight: Dimensions.get('window').width - 220,
     marginBottom: 10,
@@ -289,6 +526,13 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 30,
+  },
+  post_save_container: {
+    bottom: 10,
+    width: "100%",
+    paddingRight: 15,
+    flexDirection: "row",
+    justifyContent: "flex-end",
   },
 });
 
