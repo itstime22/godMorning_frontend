@@ -1,35 +1,56 @@
 import { StatusBar } from "expo-status-bar";
 import { useState, useEffect } from "react";
-import { isSameDay, addDays, format, getDate, startOfWeek } from "date-fns";
+import React from "react";
+import {
+  parseISO,
+  isSameDay,
+  addDays,
+  format,
+  getDate,
+  startOfWeek,
+} from "date-fns";
 import {
   StyleSheet,
   Text,
   View,
+  Button,
   ScrollView,
   Dimensions,
+  Alert,
   TouchableOpacity,
-  Button,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Input from "../components/Input";
 import Title from "../components/Title";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+//import WeekCalender from '../components/WeekCalender'
+//import { images } from '../../assets/icons/images'
 import Task from "../components/Task";
 import TimePick from "../components/TimePick";
-import { FontAwesome } from "@expo/vector-icons";
+import * as Font from "expo-font";
+import AppLoading from "expo-app-loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
 const STORAGE_KEY = "@toDos";
-
 const MyRoutineScreen = () => {
   const [newTask, setNewTask] = useState("");
   const [tasks, setTasks] = useState({});
-  const [title, setTitle] = useState("");
-  /*new*/
+  const [isReady, setIsReady] = useState(false);
   const [todos, setTodos] = useState({});
 
-  /*Date*/
+  const [title, setTitle] = useState("");
+
+  const getFonts = async () => {
+    await Font.loadAsync({
+      NanumSquareRoundB: require("../../assets/fonts/NanumSquareRoundB.ttf"),
+      Cafe24Ohsquareair: require("../../assets/fonts/Cafe24Ohsquareair.ttf"),
+    });
+  };
+
+  {
+    /*Date*/
+  }
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [datePickerVisible, setDatePickerVisible] = useState(false);
   const showDatePicker = () => {
@@ -57,27 +78,20 @@ const MyRoutineScreen = () => {
     const dayName = today.toLocaleDateString("ko-KR", {
       weekday: "long",
     });
-
-    return Platform.OS === "ios" ? `${month}.${day} ${dayName}` : `${month}`;
+    return `${month}.${day} ${dayName}`;
   }
 
   const [hoursRange, setHoursRange] = useState({
     1: { id: "1", text: "Start" },
     2: { id: "2", text: "End" },
   });
-  const _passingtime = (item, text) => {
-    const newRange = Object.assign({}, hoursRange);
-    newRange[item.id]["text"] = text;
-    setHoursRange(newRange);
-  };
 
-  /*AsyncStorage.clear*/
+  //AsyncStorage.clear()
   const _deleteTask = async (id) => {
     const currentTasks = Object.assign({}, tasks);
     delete currentTasks[id];
     setTasks(currentTasks);
-
-    /*new*/
+    //console.log('tasks', tasks)
     if (
       typeof todos[today] != "undefined" &&
       Object.keys(todos[today]["todo_list"]).length != 0
@@ -91,7 +105,6 @@ const MyRoutineScreen = () => {
   };
 
   const _updateTask = async (item) => {
-    /*new*/
     if (
       typeof todos[today] != "undefined" &&
       typeof todos[today]["todo_list"][item.id] !== "undefined"
@@ -110,17 +123,14 @@ const MyRoutineScreen = () => {
       setTasks(currentTasks);
     }
   };
-
-  /*new*/
   const [change, setChange] = useState(true);
-
   const _toggleTask = async (id) => {
-    /*new*/
     if (
       typeof todos[today] != "undefined" &&
       typeof todos[today]["todo_list"][id] !== "undefined"
     ) {
       const currentTodos = Object.assign({}, todos);
+      //console.log('여기까진 옴 ')
       currentTodos[today]["todo_list"][id]["completed"] =
         !currentTodos[today]["todo_list"][id]["completed"];
       setTodos[currentTodos];
@@ -133,7 +143,6 @@ const MyRoutineScreen = () => {
       setTasks(currentTasks);
     }
   };
-
   const _addTask = () => {
     const ID = Date.now().toString();
     const newTaskObject = {
@@ -142,19 +151,14 @@ const MyRoutineScreen = () => {
     setNewTask("");
     setTasks({ ...tasks, ...newTaskObject });
   };
-  useEffect(() => {
-    console.log(tasks);
-  }, [tasks]);
 
   const _handleTextChange = (text) => {
     setNewTask(text);
   };
-
   /*week */
   const [week, setWeek] = useState([]);
   useEffect(() => {
     const weekDays = getWeekDays(selectedDate);
-    /*new*/
     setWeek(weekDays);
     //+ 이거 하면 다른날짜 렌더링할때 todo 안보임
     setTasks({});
@@ -173,7 +177,9 @@ const MyRoutineScreen = () => {
   }, [selectedDate, change]);
 
   const getWeekDays = (date) => {
+    //  console.log(date, 'datee')
     const start = startOfWeek(date, { weekStartsOn: 1 });
+    //  console.log(start)
     const weekOfLength = 7;
     const final = [];
     for (let i = 0; i < weekOfLength; i++) {
@@ -190,7 +196,6 @@ const MyRoutineScreen = () => {
     setSelectedDate(date);
   };
 
-  /*new, post*/
   const onPost = () => {
     var step = 0;
     //todo 개수 구하기
@@ -223,6 +228,8 @@ const MyRoutineScreen = () => {
     newPost["id"] = 1;
     console.log(todos[today]["title"]);
 
+    // console.log(newPost['id'])
+
     axios({
       method: "POST",
       url: "http://3.38.14.254/routine/create",
@@ -237,7 +244,9 @@ const MyRoutineScreen = () => {
       });
   };
 
-  /*new, 날짜 변환*/
+  {
+    /*날짜 변환 */
+  }
   const month = selectedDate.toLocaleDateString("en-US", {
     month: "2-digit",
   });
@@ -246,7 +255,6 @@ const MyRoutineScreen = () => {
   });
   const today = `${month}.${day}`;
 
-  /*new, save*/
   const onSave = async () => {
     Alert.alert("Save");
 
@@ -298,36 +306,35 @@ const MyRoutineScreen = () => {
 
   //데이터 전체 지우기
   //AsyncStorage.clear()
-
   return (
     <LinearGradient
       colors={[
-        //"#9DC0FF",
+        "#9DC0FF",
         "rgba(184, 181, 255, 0.97) ",
         "rgba(210, 171, 217, 0.85) ",
         "rgba(248, 204, 187, 0.94) ",
         "rgba(255, 249, 179, 0.82) ",
       ]}
       style={{
-        flex: 1,
-        paddingTop: 140,
+        paddingTop: 120,
+        width: "100%",
+        height: "100%",
         justifyContent: "center",
         alignItems: "center",
       }}
     >
-      {/*날짜+요일 출력*/}
-      <StatusBar style="dark" />
+      <StatusBar style="auto" />
       <View style={styles.datepicker}>
         <Text
+          onPress={showDatePicker}
           style={{
-            margin: 10,
-            fontSize: 25,
-            fontFamily: "NanumSquareRoundB",
+            fontSize: 24,
+            fontWeight: "600",
+            fontFamily: "Cafe24Ohsquareair",
           }}
         >
           {selectedDate ? printDate() : "No date selected"}
         </Text>
-        <FontAwesome name="caret-down" size={30} onPress={showDatePicker} />
 
         <DateTimePickerModal
           date={selectedDate}
@@ -339,7 +346,6 @@ const MyRoutineScreen = () => {
         />
       </View>
 
-      {/*week 캘린더*/}
       <View style={styles.weekpicker}>
         <View style={styles.weekcontainer}>
           {week.map((weekDay) => {
@@ -367,11 +373,18 @@ const MyRoutineScreen = () => {
         </View>
       </View>
 
-      {/*new*/}
-
       <View style={styles.todo}>
         <Title value={title} onChangeText={setTitle}></Title>
-        {/*new*/}
+        {/**
+        {
+          typeof todos[today] == 'undefined' ? (
+            <Title value={title} onChangeText={setTitle}></Title>
+          ) : (
+            <Title value={title} onChangeText={setTitle}></Title>
+          )
+          // <Title value={todos[today]['title']} onChangeText={setTitle}></Title>
+        }
+ */}
         <View style={styles.post_save_container}>
           <Button title="Save" onPress={onSave}></Button>
           <Button title="Post" onPress={onPost}></Button>
@@ -410,6 +423,31 @@ const MyRoutineScreen = () => {
               />
             </>
           )}
+          {/*
+
+         {typeof todos[today] == 'undefined'
+            ? Object.values(hoursRange).map((item) => (
+                <>
+                  <Text>{item.text}</Text>
+                  <TimePick
+                    key={item.id}
+                    item={item}
+                    setHoursRange={setHoursRange}
+                    hoursRange={hoursRange}
+                  />
+                </>
+              ))
+            : Object.values(hoursRange).map((item) => (
+                <>
+                  <TimePick
+                    key={item.id}
+                    item={item}
+                    setHoursRange={setHoursRange}
+                    hoursRange={hoursRange}
+                  />
+                </>
+              ))}
+           */}
         </View>
 
         <Input
@@ -418,7 +456,61 @@ const MyRoutineScreen = () => {
           onSubmitEditing={_addTask}
         />
         <ScrollView>
-          {/*new*/}
+          {/* 
+           {typeof todos[selectedDate] == 'undefined'
+            ? console.log('render , empty')
+            : console.log(todos[selectedDate]['todo_list'])}
+           
+          {Object.values(todos[selectedDate]['todo_list']).map((item) => (
+            <Task
+              key={item.id}
+              item={item}
+              deleteTask={_deleteTask}
+              toggleTask={_toggleTask}
+              updateTask={_updateTask}
+            />
+          ))}
+          
+            {typeof todos[selectedDate] == 'undefined'
+            ? Object.values(tasks).map((item) => (
+                <Task
+                  key={item.id}
+                  item={item}
+                  deleteTask={_deleteTask}
+                  toggleTask={_toggleTask}
+                  updateTask={_updateTask}
+                />
+              ))
+            : Object.values(todos[selectedDate]['todo_list']).map((item) => (
+                <Task
+                  key={item.id}
+                  item={item}
+                  deleteTask={_deleteTask}
+                  toggleTask={_toggleTask}
+                  updateTask={_updateTask}
+                />
+              ))}
+              {typeof todos[selectedDate] == 'undefined'
+            ? Object.values(tasks).map((item) => (
+                <Task
+                  key={item.id}
+                  item={item}
+                  deleteTask={_deleteTask}
+                  toggleTask={_toggleTask}
+                  updateTask={_updateTask}
+                />
+              ))
+            : Object.values(todos[selectedDate]['todo_list']).map((item) => (
+                <Task
+                  key={item.id}
+                  item={item}
+                  deleteTask={_deleteTask}
+                  toggleTask={_toggleTask}
+                  updateTask={_updateTask}
+                />
+              ))}
+          */}
+
           {typeof todos[today] == "undefined" ? (
             Object.values(tasks).map((item) => (
               <Task
@@ -451,17 +543,6 @@ const MyRoutineScreen = () => {
               ))}
             </>
           )}
-          {/*
-          {Object.values(tasks).map((item) => (
-            <Task
-              key={item.id}
-              item={item}
-              deleteTask={_deleteTask}
-              toggleTask={_toggleTask}
-              updateTask={_updateTask}
-            />
-          ))}
-          */}
         </ScrollView>
       </View>
     </LinearGradient>
@@ -470,10 +551,8 @@ const MyRoutineScreen = () => {
 
 const styles = StyleSheet.create({
   datepicker: {
+    justifyContent: "center",
     alignItems: "center",
-    flexDirection: "row",
-    marginBottom: 10,
-    marginTop: -30,
   },
   weekpicker: {
     justifyContent: "space-evenly",
@@ -491,9 +570,11 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width - 10,
     alignItems: "flex-start",
     left: 10,
+
     flexDirection: "row",
     //alignItems: 'center',
     //  justifyContent: 'center',
+
     //paddingHorizontal: 17,
     //marginRight: Dimensions.get('window').width - 220,
     marginBottom: 10,
@@ -514,10 +595,16 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 
-  weekDayText: { fontSize: 17, marginBottom: 5, fontWeight: "500" },
-  dayText: { fontSize: 20 },
+  weekDayText: {
+    fontSize: 17,
+    marginBottom: 5,
+    fontWeight: "500",
+    fontFamily: "Cafe24Ohsquareair",
+  },
+  dayText: { fontSize: 16, fontFamily: "Cafe24Ohsquareair" },
   selectedDayText: {
     color: "white",
+    fontFamily: "Cafe24Ohsquareair",
     fontWeight: "bold",
   },
   selectedTouchableDay: {
@@ -525,6 +612,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: 30,
     height: 30,
+    fontFamily: "Cafe24Ohsquareair",
     borderRadius: 30,
   },
   post_save_container: {

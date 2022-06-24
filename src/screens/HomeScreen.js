@@ -5,56 +5,67 @@ import {
   View,
   ScrollView,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import todos from "../../assets/data/todos";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import RoutineButton from "../components/RoutineButton";
 import closestIndexTo from "date-fns/fp/closestIndexTo/index";
-import axios from 'axios';
+import axios from "axios";
+import Spinner from "../../assets/spinner.gif";
 
 function HomeScreen() {
   const navigation = useNavigation();
-  const [fettodo,setFetchTodo] = useState(null);
+  const [fettodo, setFetchTodo] = useState(null);
   const [timeId, setTimeId] = useState(4);
 
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [flag, setFlag] = useState(false);
+  const isFocused = useIsFocused();
+  const wisesaying = [
+    "게으르지 않음은 영원한 삶의 집이요, 게으름의 죽음은 집이다",
+    "명언2",
+    "명언3",
+    "명언4",
+    "명언5",
+  ];
+
+  const getRandomIndex = function (length) {
+    return parseInt(Math.random() * length);
+  };
 
   useEffect(() => {
     const fetching = async () => {
       try {
         // 요청이 시작 할 때에는 error 와 users 를 초기화하고
-        setError(null)
-        setFetchTodo(null)
+        setError(null);
+        setFetchTodo(null);
         // loading 상태를 true 로 바꿉니다.
-        setLoading(true)
-        const response = await axios.get(
-          'http://3.38.14.254/newRoutine/list',
-        )
-        setFetchTodo(response.data)// 데이터는 response.data 안에 들어있습니다.
-       //console.log(response.data)
+        setLoading(true);
+        const response = await axios.get("http://3.38.14.254/newRoutine/list");
+        setFetchTodo(response.data); // 데이터는 response.data 안에 들어있습니다.
+        //console.log(response.data)
       } catch (e) {
-        setError(e)
+        setError(e);
       }
-      setLoading(false)
-    }
-    fetching()
-  }, [])
+      setLoading(false);
+      setFlag(!flag);
+    };
+    fetching();
+  }, [isFocused]);
 
-  useEffect(() => {  
-    fettodo !==null ? (
-    //  console.log(timeId),
-    setTimeTodos(
-      fettodo.filter(
-        (routine) =>
-          routine.startTime.charAt(0) == timeId ||
-          routine.startTime.substring(0, 2) == timeId
-      )
-    )
-    ):console.log('아직')
-  }, [timeId]);
-
- 
+  useEffect(() => {
+    fettodo !== null
+      ? setTimeTodos(
+          fettodo.filter(
+            (routine) =>
+              routine.startTime.charAt(0) == timeId ||
+              routine.startTime.substring(0, 2) == timeId
+          )
+        )
+      : console.log("아직");
+  }, [timeId, flag]);
 
   const timeTable = [
     { id: 4, title: "4시", isSelect: true },
@@ -69,6 +80,7 @@ function HomeScreen() {
   ];
 
   const [times, setTimes] = useState(timeTable);
+
   const [timeTodos, setTimeTodos] = useState(null);
 
   const ontimePress = (index) => {
@@ -114,38 +126,48 @@ function HomeScreen() {
 
       <View
         style={{
-          position: "absolute",
-          borderBottomColor: "#C4C4C4",
-          borderBottomWidth: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: 20,
+          marginBottom: 20,
         }}
-      />
+      >
+        <Image
+          source={require("../../assets/images/wisesaying.png")}
+          style={{ position: "absolute", width: "95%" }}
+        />
+
+        <Text style={{ fontWeight: "550", fontSize: 15 }}>
+          {wisesaying[getRandomIndex(wisesaying.length)]}
+        </Text>
+      </View>
+
       <View style={styles.r_container}>
         <ScrollView contentContainerStyle={styles.routine}>
-        {fettodo !==null && timeTodos !==null ? (
-          <>
-          <View style={styles.column1}>
-            {timeTodos
-              .filter((routine, index) => index % 2 == 0)
-              .map((routine) => (
-                <>
-                <RoutineButton routine={routine} key={routine.post_no} />
-                <Text>{routine.startTime}</Text>
-                <Text> - </Text>
-                <Text>{routine.endTime}</Text>
-                </>
-              ))}
-          </View>
-          <View style={styles.column2}>
-            {timeTodos
-              .filter((routine, index) => index % 2 == 1)
-              .map((routine) => (
-                <RoutineButton routine={routine} key={routine.post_no}/>
-              ))}
+          {fettodo !== null && timeTodos !== null ? (
+            <>
+              <View style={styles.column1}>
+                {timeTodos
+                  .filter((routine, index) => index % 2 == 0)
+                  .map((routine) => (
+                    <>
+                      <RoutineButton routine={routine} key={routine.post_no} />
+                    </>
+                  ))}
               </View>
-             </> 
-        ) :
-        <Text>로딩중</Text>
-              }
+              <View style={styles.column2}>
+                {timeTodos
+                  .filter((routine, index) => index % 2 == 1)
+                  .map((routine) => (
+                    <RoutineButton routine={routine} key={routine.post_no} />
+                  ))}
+              </View>
+            </>
+          ) : (
+            <View style={{ justifyContent: "center", alignItems: "center" }}>
+              <Image source={Spinner} style={{ width: 100, height: 100 }} />
+            </View>
+          )}
         </ScrollView>
       </View>
     </View>
@@ -153,18 +175,32 @@ function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  wise: {
+    backgroundColor: "#FCE1F4",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "70%",
+    //borderRadius:30,
+    blurRadius: 1,
+
+    blurRadius: 10,
+    height: 40,
+  },
   container: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
     paddingVertical: 5,
     backgroundColor: "white",
   },
   routine: {
     flexDirection: "row",
     justifyContent: "center",
+    flex: 2,
   },
   r_container: {
     flex: 1,
-    height: "100%",
+    //height: "100%",
   },
 
   column1: {

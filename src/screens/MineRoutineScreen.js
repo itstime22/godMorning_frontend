@@ -1,48 +1,29 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
-  Button,
   View,
+  Button,
   ScrollView,
   Dimensions,
   TouchableOpacity,
   useWindowDimensions,
   Alert,
+  Image,
+  Pressable,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import TimePick from "../components/TimePick";
-import todos from "../../assets/data/todos";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
+import IconButton from "../components/IconButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-function OtherRoutineScreen() {
-  const [fettodo, setFetchTodo] = useState(null);
 
+function MineRoutineScreen() {
+  const [fettodo, setFetchTodo] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  const onDelete = () => {
-    Alert.alert("삭제됨");
-    axios
-      .delete(
-        `http://3.38.14.254/routine/delete?post_no=${route.params?.post_no}`
-      )
-      .then(function (response) {
-        // handle success
-        console.log(response);
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      })
-      .then(function () {
-        // always executed
-      });
-  };
-
-  const navigation = useNavigation();
-  const route = useRoute();
 
   useEffect(() => {
     const fetching = async () => {
@@ -64,34 +45,34 @@ function OtherRoutineScreen() {
     fetching();
   }, []);
 
-  console.log(route.params?.post_no);
   const width = useWindowDimensions().width;
   const height = useWindowDimensions().height;
 
-  const [heartCount, addHeart] = useState(0);
-  const [scrapCount, addScrap] = useState(0);
-
-  const [scraped, setScraped] = useState(false);
-  const [hearted, setHearted] = useState(false);
-
-  const letScrap = () => {
-    setScraped(!scraped);
-    if (scraped) {
-      addScrap(scrapCount++);
-      console.log("scrap: ", scrapCount);
-    }
-  };
-
-  const letHeart = () => {
-    setHearted(!hearted);
-    if (hearted) {
-      addHeart(heartCount++);
-      console.log("heart: ", heartCount);
-    }
-  };
+  const navigation = useNavigation();
+  const route = useRoute();
+  const TodoId = route.params?.id;
 
   const goBack = () => {
     navigation.goBack();
+  };
+
+  const onDelete = () => {
+    Alert.alert("삭제됨");
+    axios
+      .delete(
+        `http://3.38.14.254/routine/delete?post_no=${route.params?.post_no}`
+      )
+      .then(function (response) {
+        // handle success
+        console.log(response);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
   };
 
   return (
@@ -115,26 +96,21 @@ function OtherRoutineScreen() {
             <FontAwesome onPress={() => goBack()} name="angle-left" size={40} />
             <Text style={styles.title}>{fettodo["title"]}</Text>
 
-            <TouchableOpacity onPress={letScrap}>
-              {scraped ? (
-                <FontAwesome name="bookmark" size={30} color="black" />
-              ) : (
-                <FontAwesome name="bookmark" size={30} color="white" />
-              )}
-            </TouchableOpacity>
+            <Pressable onPress={onDelete}>
+              <Image
+                style={{ size: 30 }}
+                source={require("../../assets/icons/outline_delete_black_24dp.png")}
+              />
+            </Pressable>
+
+            {/* <Button
+              onPress={onDelete}
+              style={{ width: 30, height: 15 }}
+              title=" 삭제 "
+            ></Button> */}
           </View>
 
           <View style={styles.userInfo}>
-            <View style={{ flexDirection: "row" }}>
-              <FontAwesome name="user" size={30} />
-              <Text style={styles.user}>게시자</Text>
-              <Button
-                onPress={onDelete}
-                style={{ width: 30, height: 15 }}
-                title=" 삭제 "
-              ></Button>
-            </View>
-
             <View style={styles.timePick}>
               <View
                 style={{ flexDirection: "row", justifyContent: "space-evenly" }}
@@ -147,17 +123,6 @@ function OtherRoutineScreen() {
                   {fettodo["endTime"]}
                 </Text>
               </View>
-              <TouchableOpacity onPress={letHeart}>
-                {hearted ? (
-                  <FontAwesome
-                    name="heart"
-                    size={30}
-                    color="rgb(255, 127, 127)"
-                  />
-                ) : (
-                  <FontAwesome name="heart" size={30} color="white" />
-                )}
-              </TouchableOpacity>
             </View>
           </View>
 
@@ -170,11 +135,14 @@ function OtherRoutineScreen() {
           </ScrollView>
         </>
       ) : (
-        <Text>로딩중</Text>
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <Text style={{ size: 30 }}>로딩중..</Text>
+        </View>
       )}
     </LinearGradient>
   );
 }
+
 const styles = StyleSheet.create({
   todo: {
     justifyContent: "center",
@@ -223,4 +191,4 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
 });
-export default OtherRoutineScreen;
+export default MineRoutineScreen;

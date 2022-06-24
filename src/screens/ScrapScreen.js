@@ -9,7 +9,7 @@ const ScrapScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>스크랩한 모닝 루틴</Text>
+      <Text style={styles.title}>스크랩한 루틴들</Text>
       <ScrollView contentContainerStyle={styles.routine}>
         <View style={styles.column1}>
           {todos.map((routine) => (

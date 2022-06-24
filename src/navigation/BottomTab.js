@@ -10,6 +10,8 @@ import { FontAwesome } from "@expo/vector-icons";
 import MineScreen from "../screens/MineScreen";
 import HomeTabNav from "./HomeTab";
 import OtherRoutineScreen from "../screens/OtherRoutineScreen";
+import MineRoutineScreen from "../screens/MineRoutineScreen";
+
 //////////MyPage
 const MyPageStack = createNativeStackNavigator();
 
@@ -19,6 +21,7 @@ const MyPageStackNav = () => {
       <MyPageStack.Screen name="MyPage" component={MyPageScreen} />
       <MyPageStack.Screen name="Scrap" component={ScrapScreen} />
       <MyPageStack.Screen name="Mine" component={MineScreen} />
+      <MyPageStack.Screen name="Mines" component={MineRoutineScreen} />
     </MyPageStack.Navigator>
   );
 };

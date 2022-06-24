@@ -3,7 +3,7 @@ import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 
-const RoutineButton = ({ routine }) => {
+const MyRoutineButton = ({ routine }) => {
   //한사람의 todos 전체받기
   /*new*/
   const navigation = useNavigation();
@@ -44,7 +44,7 @@ const RoutineButton = ({ routine }) => {
 
   const goTodoPage = () => {
     //  console.log(id)
-    navigation.navigate("Others", { post_no });
+    navigation.navigate("Mines", { post_no });
   };
 
   return (
@@ -75,7 +75,6 @@ const RoutineButton = ({ routine }) => {
       </LinearGradient>
       <View>
         <Text style={styles.routineName}>{Title}</Text>
-
         <Text style={styles.routineName}>🤍 100</Text>
         <Text style={styles.routineName}>💚 100</Text>
       </View>
@@ -106,4 +105,4 @@ const styles = StyleSheet.create({
     bottom: 15,
   },
 });
-export default RoutineButton;
+export default MyRoutineButton;

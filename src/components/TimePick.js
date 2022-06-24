@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
-const TimePick = ({ item, passingtime }) => {
+const TimePick = ({ item, text, id, setHoursRange, hoursRange }) => {
   const [selectedDate, setSelectedDate] = useState();
   const [datePickerVisible, setDatePickerVisible] = useState(false);
 
