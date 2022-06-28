@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, Button, StyleSheet } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const TimePick = ({ item, text, id, setHoursRange, hoursRange }) => {
   const [selectedDate, setSelectedDate] = useState();
   const [datePickerVisible, setDatePickerVisible] = useState(false);
-
-  /*new*/
+  // console.log('Time Pick hour', item)
   const handleConfirm = (hour) => {
     setSelectedDate(hour);
     hideDatePicker();
@@ -15,8 +14,7 @@ const TimePick = ({ item, text, id, setHoursRange, hoursRange }) => {
     });
     const currentTime = Object.assign({}, hoursRange);
     currentTime[id]["text"] = today;
-    //  console.log(currentTime)
-    //currentTime[item.id]['text'] = today
+    
     setHoursRange(currentTime);
   };
 
@@ -30,22 +28,22 @@ const TimePick = ({ item, text, id, setHoursRange, hoursRange }) => {
   };
 
   function printHour() {
-    //object->string
-    //object
-    //console.log(selectedDate)
+    
     const today = selectedDate.toLocaleTimeString("en-US", {
       timeStyle: "short",
     });
-    //
-    // passingtime(item, today)
+
     return `${today}`;
   }
 
   return (
-    <View>
-      <Text style={styles.title} onPress={showDatePicker}>
-        {selectedDate ? printHour() : item.text}
-        {item.id == 1 ? <Text> ~ </Text> : null}
+    <View style={styles.container}>
+      <Text
+        style={{ fontSize: 20, color: "white", fontWeight: "300" }}
+        onPress={showDatePicker}
+      >
+        {selectedDate ? printHour() : text}
+        {id == 1 ? <Text> ~ </Text> : null}
       </Text>
 
       <DateTimePickerModal
@@ -61,12 +59,7 @@ const TimePick = ({ item, text, id, setHoursRange, hoursRange }) => {
 };
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 25,
-    color: "white",
-    fontWeight: "300",
-    fontFamily: "NanumSquareRoundB",
-  },
+  container: {},
 });
 
 export default TimePick;

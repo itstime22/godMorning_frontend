@@ -65,10 +65,11 @@ const styles = StyleSheet.create({
     fontFamily: "Cafe24Ohsquareair",
   },
   completed: {
-    fontSize: 20,
+    fontSize: 17,
     flex: 1,
     color: "gray",
     textDecorationLine: "line-through",
+    fontFamily: "Cafe24Ohsquareair",
   },
 });
 

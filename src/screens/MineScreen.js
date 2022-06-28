@@ -44,9 +44,7 @@ const MineScreen = () => {
             {fettodo
               .filter((routine, index) => index % 2 == 0)
               .map((routine) => (
-                <>
-                  <MyRoutineButton routine={routine} key={routine.post_no} />
-                </>
+                <MyRoutineButton routine={routine} key={routine.post_no} />
               ))}
           </View>
           <View style={styles.column2}>

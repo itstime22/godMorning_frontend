@@ -210,25 +210,23 @@ const MyRoutineScreen = () => {
       });
     }
 
-    const postType = {
-      id: 1,
-      title: "gahee",
-      create_date: "20220616",
-      startTime: "9",
-      endTime: "11",
-      todo_list: [
-        {
-          content: "post",
-        },
-      ],
-    };
+    // const postType = {
+    //   id: 1,
+    //   title: "gahee",
+    //   create_date: "20220616",
+    //   startTime: "9",
+    //   endTime: "11",
+    //   todo_list: [
+    //     {
+    //       content: "post",
+    //     },
+    //   ],
+    // };
     const newPost = Object.assign({}, todos[today]);
 
     newPost["todo_list"] = Posttodo;
     newPost["id"] = 1;
     console.log(todos[today]["title"]);
-
-    // console.log(newPost['id'])
 
     axios({
       method: "POST",
@@ -278,7 +276,7 @@ const MyRoutineScreen = () => {
       const addTodos = Object.assign({}, todos[today]["todo_list"], addTasks);
       const newTodos = todos;
       newTodos[today]["todo_list"] = addTodos;
-      //20220616여기고침
+
       newTodos[today]["title"] = title;
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newTodos));
     } else {
@@ -309,7 +307,6 @@ const MyRoutineScreen = () => {
   return (
     <LinearGradient
       colors={[
-        "#9DC0FF",
         "rgba(184, 181, 255, 0.97) ",
         "rgba(210, 171, 217, 0.85) ",
         "rgba(248, 204, 187, 0.94) ",
@@ -375,16 +372,6 @@ const MyRoutineScreen = () => {
 
       <View style={styles.todo}>
         <Title value={title} onChangeText={setTitle}></Title>
-        {/**
-        {
-          typeof todos[today] == 'undefined' ? (
-            <Title value={title} onChangeText={setTitle}></Title>
-          ) : (
-            <Title value={title} onChangeText={setTitle}></Title>
-          )
-          // <Title value={todos[today]['title']} onChangeText={setTitle}></Title>
-        }
- */}
         <View style={styles.post_save_container}>
           <Button title="Save" onPress={onSave}></Button>
           <Button title="Post" onPress={onPost}></Button>
@@ -392,16 +379,14 @@ const MyRoutineScreen = () => {
         <View style={[styles.timePick]}>
           {typeof todos[today] == "undefined" ? (
             Object.values(hoursRange).map((item) => (
-              <>
-                <TimePick
-                  key={item.id}
-                  item={item}
-                  text={item.text}
-                  id={item.id}
-                  setHoursRange={setHoursRange}
-                  hoursRange={hoursRange}
-                />
-              </>
+              <TimePick
+                key={item.id}
+                item={item}
+                text={item.text}
+                id={item.id}
+                setHoursRange={setHoursRange}
+                hoursRange={hoursRange}
+              />
             ))
           ) : (
             <>
@@ -423,31 +408,6 @@ const MyRoutineScreen = () => {
               />
             </>
           )}
-          {/*
-
-         {typeof todos[today] == 'undefined'
-            ? Object.values(hoursRange).map((item) => (
-                <>
-                  <Text>{item.text}</Text>
-                  <TimePick
-                    key={item.id}
-                    item={item}
-                    setHoursRange={setHoursRange}
-                    hoursRange={hoursRange}
-                  />
-                </>
-              ))
-            : Object.values(hoursRange).map((item) => (
-                <>
-                  <TimePick
-                    key={item.id}
-                    item={item}
-                    setHoursRange={setHoursRange}
-                    hoursRange={hoursRange}
-                  />
-                </>
-              ))}
-           */}
         </View>
 
         <Input
@@ -455,62 +415,8 @@ const MyRoutineScreen = () => {
           onChangeText={_handleTextChange}
           onSubmitEditing={_addTask}
         />
-        <ScrollView>
-          {/* 
-           {typeof todos[selectedDate] == 'undefined'
-            ? console.log('render , empty')
-            : console.log(todos[selectedDate]['todo_list'])}
-           
-          {Object.values(todos[selectedDate]['todo_list']).map((item) => (
-            <Task
-              key={item.id}
-              item={item}
-              deleteTask={_deleteTask}
-              toggleTask={_toggleTask}
-              updateTask={_updateTask}
-            />
-          ))}
-          
-            {typeof todos[selectedDate] == 'undefined'
-            ? Object.values(tasks).map((item) => (
-                <Task
-                  key={item.id}
-                  item={item}
-                  deleteTask={_deleteTask}
-                  toggleTask={_toggleTask}
-                  updateTask={_updateTask}
-                />
-              ))
-            : Object.values(todos[selectedDate]['todo_list']).map((item) => (
-                <Task
-                  key={item.id}
-                  item={item}
-                  deleteTask={_deleteTask}
-                  toggleTask={_toggleTask}
-                  updateTask={_updateTask}
-                />
-              ))}
-              {typeof todos[selectedDate] == 'undefined'
-            ? Object.values(tasks).map((item) => (
-                <Task
-                  key={item.id}
-                  item={item}
-                  deleteTask={_deleteTask}
-                  toggleTask={_toggleTask}
-                  updateTask={_updateTask}
-                />
-              ))
-            : Object.values(todos[selectedDate]['todo_list']).map((item) => (
-                <Task
-                  key={item.id}
-                  item={item}
-                  deleteTask={_deleteTask}
-                  toggleTask={_toggleTask}
-                  updateTask={_updateTask}
-                />
-              ))}
-          */}
 
+        <ScrollView>
           {typeof todos[today] == "undefined" ? (
             Object.values(tasks).map((item) => (
               <Task

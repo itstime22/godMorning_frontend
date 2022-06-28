@@ -1,12 +1,9 @@
 import { StyleSheet, Text, Pressable, Image, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const LoginScreen = ({ navigation }) => {
-  const inset = useSafeAreaInsets();
-  //console.log(inset);
-  //useEffect(() => {}, []);
 
   const login = () => {
     navigation.navigate("BottomTab");
@@ -37,6 +34,7 @@ const LoginScreen = ({ navigation }) => {
         }}
         source={require("../../assets/images/title.png")}
       />
+      {/*
       <Pressable
         onPress={login}
         style={{
@@ -48,7 +46,7 @@ const LoginScreen = ({ navigation }) => {
           justifyContent: "center",
           alignItems: "center",
         }}
-      >
+      > 
         <Text
           style={{
             color: "gray",
@@ -58,7 +56,8 @@ const LoginScreen = ({ navigation }) => {
         >
           Google
         </Text>
-      </Pressable>
+      </Pressable>*/}
+  
     </LinearGradient>
   );
 };
