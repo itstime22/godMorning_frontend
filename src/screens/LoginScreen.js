@@ -1,10 +1,48 @@
-import { StyleSheet, Text, Pressable, Image, View } from "react-native";
+import {
+  TouchableOpacity,
+  StyleSheet,
+  Text,
+  Pressable,
+  Image,
+  View,
+  Button,
+} from "react-native";
 import React, { useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  KakaoOAuthToken,
+  KakaoProfile,
+  //getProfile as getKakaoProfile,
+  login,
+  logout,
+  unlink,
+} from "@react-native-seoul/kakao-login";
+
+const signInWithKakao = async () => {
+  const token = await login();
+
+  setResult(JSON.stringify(token));
+};
+
+const signOutWithKakao = async () => {
+  const message = await logout();
+
+  setResult(message);
+};
+
+const getKakaoProfile = async () => {
+  const profile = await getProfile();
+
+  setResult(JSON.stringify(profile));
+};
+
+const unlinkKakao = async () => {
+  const message = await unlink();
+
+  setResult(message);
+};
 
 const LoginScreen = ({ navigation }) => {
-
   const login = () => {
     navigation.navigate("BottomTab");
   };
@@ -29,24 +67,25 @@ const LoginScreen = ({ navigation }) => {
       <Image
         style={{
           position: "absolute",
-          width: 550,
-          height: 550,
+          width: 500,
+          height: 500,
         }}
         source={require("../../assets/images/title.png")}
       />
-      {/*
+
+      {/*홈화면 로그인*/}
       <Pressable
         onPress={login}
         style={{
-          top: 130,
+          top: 350,
           height: 50,
-          width: 250,
+          width: 200,
           borderRadius: 10,
           backgroundColor: "white",
           justifyContent: "center",
           alignItems: "center",
         }}
-      > 
+      >
         <Text
           style={{
             color: "gray",
@@ -54,10 +93,18 @@ const LoginScreen = ({ navigation }) => {
             fontFamily: "NanumSquareRoundB",
           }}
         >
-          Google
+          go to home
         </Text>
-      </Pressable>*/}
-  
+      </Pressable>
+
+      {/*kakao*/}
+
+      <TouchableOpacity onPress={signInWithKakao}>
+        <Image
+          source={require("../../assets/images/kakaoStart2.png")}
+          style={{ top: 150 }}
+        />
+      </TouchableOpacity>
     </LinearGradient>
   );
 };

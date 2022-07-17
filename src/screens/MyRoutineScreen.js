@@ -78,7 +78,7 @@ const MyRoutineScreen = () => {
     const dayName = today.toLocaleDateString("ko-KR", {
       weekday: "long",
     });
-    return `${month}.${day} ${dayName}`;
+    return `${month}`;
   }
 
   const [hoursRange, setHoursRange] = useState({
@@ -210,18 +210,6 @@ const MyRoutineScreen = () => {
       });
     }
 
-    // const postType = {
-    //   id: 1,
-    //   title: "gahee",
-    //   create_date: "20220616",
-    //   startTime: "9",
-    //   endTime: "11",
-    //   todo_list: [
-    //     {
-    //       content: "post",
-    //     },
-    //   ],
-    // };
     const newPost = Object.assign({}, todos[today]);
 
     newPost["todo_list"] = Posttodo;
@@ -523,6 +511,7 @@ const styles = StyleSheet.create({
   },
   post_save_container: {
     bottom: 10,
+    padding: 10,
     width: "100%",
     paddingRight: 15,
     flexDirection: "row",

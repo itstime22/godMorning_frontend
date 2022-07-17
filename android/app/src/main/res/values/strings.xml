@@ -2,4 +2,5 @@
   <string name="app_name">godmorning_front</string>
   <string name="expo_splash_screen_resize_mode" translatable="false">contain</string>
   <string name="expo_splash_screen_status_bar_translucent" translatable="false">false</string>
+  <string name="kakao_app_key">5b125655760fa0ff5853d0b6b1302bb2</string>
 </resources>

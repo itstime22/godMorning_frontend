@@ -29,6 +29,22 @@
         <data android:scheme="com.suyeon.godmorning_front"/>
       </intent-filter>
     </activity>
+
+    
+    <activity
+   android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
+   android:exported="true">
+  <intent-filter>
+      <action android:name="android.intent.action.VIEW" />
+      <category android:name="android.intent.category.DEFAULT" />
+      <category android:name="android.intent.category.BROWSABLE" />
+
+      <!-- Redirect URI: "kakao{NATIVE_APP_KEY}://oauth“ -->
+      <data android:host="oauth"
+          android:scheme="kakao5b125655760fa0ff5853d0b6b1302bb2" />
+  </intent-filter>
+</activity>
+
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>
   </application>
 </manifest>

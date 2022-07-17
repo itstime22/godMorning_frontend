@@ -20,7 +20,7 @@ const MyPageScreen = ({ navigation }) => {
         flex: 1,
         paddingTop: inset.top,
         paddingBottom: inset.bottom,
-        backgroundColor: "yellow",
+        backgroundColor: "white",
       }}
     >
       <View style={{ justifyContent: "center", alignItems: "center" }}>
