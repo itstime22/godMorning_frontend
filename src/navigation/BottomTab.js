@@ -15,6 +15,20 @@ import HomeScreen from "../screens/HomeScreen";
 import PopularScreen from "../screens/PopularScreen";
 import NewScreen from "../screens/NewScreen";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import LoginScreen from "../screens/LoginScreen";
+import InitialScreen from "../screens/InitialScreen";
+import SignupScreen from "../screens/SignupScreen";
+
+const LoginStack = createNativeStackNavigator();
+const LoginStackNav = () => {
+  return (
+    <LoginStack.Navigator screenOptions={{ headerShown: false }}>
+      <LoginStack.Screen name="Initial" component={InitialScreen} />
+      <LoginStack.Screen name="Login" component={LoginScreen} />
+      <LoginStack.Screen name="SignUp" component={SignupScreen} />
+    </LoginStack.Navigator>
+  );
+};
 
 //////////MyPage
 const MyPageStack = createNativeStackNavigator();
@@ -41,6 +55,7 @@ const MyStackNav = () => {
   );
 };
 
+///// 탑 탭
 const HomeTab = createMaterialTopTabNavigator();
 const HomeTabNav = () => {
   return (
@@ -84,8 +99,8 @@ const HomeTabNav = () => {
   );
 };
 
+//// 제일 중심 스택
 const MyHomeStack = createNativeStackNavigator();
-
 const MyHomeStackNav = () => {
   return (
     <MyHomeStack.Navigator>
@@ -174,14 +189,13 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: "NanumSquareRoundB",
     fontSize: 20,
-    fontWeight: "bold",
     color: "#757575",
   },
   ttitle: {
     left: 10,
     color: "black",
-    fontWeight: "bold",
-    fontSize: 20,
+    fontWeight: "600",
+    fontSize: 18,
     fontFamily: "NanumSquareRoundB",
   },
   actTitle: {
@@ -198,4 +212,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export { MyHomeStackNav, BottomTabNav, MyPageStackNav };
+export { LoginStackNav, MyHomeStackNav, BottomTabNav, MyPageStackNav };

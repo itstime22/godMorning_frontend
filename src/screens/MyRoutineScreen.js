@@ -18,6 +18,7 @@ import {
   Dimensions,
   Alert,
   TouchableOpacity,
+  Pressable,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Input from "../components/Input";
@@ -212,7 +213,7 @@ const MyRoutineScreen = () => {
 
     const newPost = Object.assign({}, todos[today]);
 
-    newPost["todo_list"] = Posttodo;
+    newPost["todo_list"] = Posttodo; //todos[today]["todo_list"]
     newPost["id"] = 1;
     console.log(todos[today]["title"]);
 
@@ -264,7 +265,6 @@ const MyRoutineScreen = () => {
       const addTodos = Object.assign({}, todos[today]["todo_list"], addTasks);
       const newTodos = todos;
       newTodos[today]["todo_list"] = addTodos;
-
       newTodos[today]["title"] = title;
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newTodos));
     } else {
@@ -361,8 +361,12 @@ const MyRoutineScreen = () => {
       <View style={styles.todo}>
         <Title value={title} onChangeText={setTitle}></Title>
         <View style={styles.post_save_container}>
-          <Button title="Save" onPress={onSave}></Button>
-          <Button title="Post" onPress={onPost}></Button>
+          <Pressable style={styles.btn} onPress={onSave}>
+            <Text style={{ color: "#545454", fontWeight: "500" }}>Save</Text>
+          </Pressable>
+          <Pressable style={styles.btn} onPress={onPost}>
+            <Text style={{ color: "#545454", fontWeight: "500" }}>Post</Text>
+          </Pressable>
         </View>
         <View style={[styles.timePick]}>
           {typeof todos[today] == "undefined" ? (
@@ -468,7 +472,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     //alignItems: 'center',
     //  justifyContent: 'center',
-
     //paddingHorizontal: 17,
     //marginRight: Dimensions.get('window').width - 220,
     marginBottom: 10,
@@ -510,12 +513,23 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   post_save_container: {
-    bottom: 10,
-    padding: 10,
+    podsition: "absoulte",
+    bottom: 5,
+    paddingVertical: 5,
     width: "100%",
-    paddingRight: 15,
+    marginLeft: 200,
     flexDirection: "row",
-    justifyContent: "flex-end",
+  },
+  btn: {
+    alignItems: "center",
+    justifyContent: "center",
+    //paddingVertical: 12,
+    //paddingHorizontal: 32,
+    width: 70,
+    height: 30,
+    borderRadius: 5,
+    //elevation: 3,
+    backgroundColor: "#EEEEEE",
   },
 });
 

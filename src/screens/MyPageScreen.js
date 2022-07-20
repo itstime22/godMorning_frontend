@@ -1,7 +1,6 @@
 import React from "react";
 import { Image, Text, StyleSheet, View, Pressable } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import Icon from "react-native-vector-icons/FontAwesome";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const MyPageScreen = ({ navigation }) => {
@@ -30,7 +29,7 @@ const MyPageScreen = ({ navigation }) => {
         />
       </View>
       <View style={styles.first}>
-        <Text style={styles.title}>마이페이지</Text>
+        <Text style={styles.title}>My Page</Text>
       </View>
       <View
         style={{
@@ -47,7 +46,7 @@ const MyPageScreen = ({ navigation }) => {
       <View style={styles.second}>
         <Text style={styles.menu}>나의 루틴</Text>
         <Pressable onPress={onMinePressed}>
-          <Icon name="chevron-right" size={23} style={styles.icon} />
+          <FontAwesome name="chevron-right" size={23} style={styles.icon} />
         </Pressable>
       </View>
 

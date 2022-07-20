@@ -14,6 +14,7 @@ const LoginScreen = ({ navigation }) => {
   };
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
 
   return (
     <LinearGradient
@@ -35,17 +36,23 @@ const LoginScreen = ({ navigation }) => {
       <Pressable onPress={goBack} style={styles.btn}>
         <Icon name={"chevron-back"} size={30} color={"white"} />
       </Pressable>
-
       <View style={styles.signInTextContainer}>
         <Text style={styles.signInText}>안녕하세요,</Text>
         <Text style={styles.signInText}>GOD[T] MORNING 입니다.</Text>
-        <Text style={styles.signInTextS}>회원가입 후 로그인을 해주세요.</Text>
+        <Text style={styles.signInTextS}>
+          서비스 이용을 위해 회원가입 해주세요.
+        </Text>
       </View>
       <View>
         <CustomInput
           value={username}
           setValue={setUsername}
           placeholder="Username"
+        />
+        <CustomInput
+          value={email}
+          setValue={setEmail}
+          placeholder="Email address"
         />
         <CustomInput
           value={password}
@@ -62,7 +69,7 @@ const styles = StyleSheet.create({
   signInTextContainer: {
     //marginTop: "23%",
     marginLeft: "10%",
-    justifyContent: "center",
+    //justifyContent: "center",
   },
   signInText: {
     fontSize: 25,

@@ -21,10 +21,12 @@ const NewScreen = () => {
         // loading 상태를 true 로 바꿉니다.
         setLoading(true);
         const response = await axios.get("http://3.38.14.254/newRoutine/list");
+        console.log(response);
         setFetchTodo(response.data); // 데이터는 response.data 안에 들어있습니다.
       } catch (e) {
         setError(e);
       }
+      
       setLoading(false);
       setFlag(!flag);
     };

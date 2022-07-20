@@ -1,7 +1,7 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import LoginScreen from "../screens/LoginScreen";
-import { BottomTabNav } from "./BottomTab";
+import { BottomTabNav, LoginStackNav } from "./BottomTab";
+
 const Stack = createNativeStackNavigator();
 
 const Main = () => {
@@ -9,7 +9,7 @@ const Main = () => {
     <Stack.Navigator>
       <Stack.Screen
         name="LogIn"
-        component={LoginScreen}
+        component={LoginStackNav}
         options={{ headerShown: false }}
       />
 
