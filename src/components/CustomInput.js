@@ -5,9 +5,21 @@ const CustomInput = ({ value, setValue, placeholder, secureTextEntry }) => {
   return (
     <TextInput
       value={value}
-      onChangeText={setValue}
+      onChangeText={(value) => setValue(value)}
       placeholder={placeholder}
       style={styles.input}
+      secureTextEntry={secureTextEntry}
+    />
+  );
+};
+
+const CustomInput2 = ({ value, setValue, placeholder, secureTextEntry }) => {
+  return (
+    <TextInput
+      style={styles.input2}
+      value={value}
+      onChangeText={(value) => setValue(value)}
+      placeholder={placeholder}
       secureTextEntry={secureTextEntry}
     />
   );
@@ -25,6 +37,17 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     alignSelf: "center",
   },
+  input2: {
+    backgroundColor: "#FFFFFF",
+    width: "70%",
+    height: 48,
+    paddingLeft: 15,
+    borderRadius: 5,
+    marginBottom: 18,
+    alignSelf: "center",
+    marginLeft: 34,
+    marginRight: 11,
+  },
 });
 
-export default CustomInput;
+export { CustomInput, CustomInput2 };

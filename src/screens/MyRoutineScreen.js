@@ -114,6 +114,7 @@ const MyRoutineScreen = () => {
       currentTodos[today]["todo_list"][item.id] = item;
       setTodos[currentTodos];
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(currentTodos));
+
       const currentTasks = Object.assign({}, tasks);
       currentTasks[item.id] = item;
       setTasks(currentTasks);
@@ -131,7 +132,6 @@ const MyRoutineScreen = () => {
       typeof todos[today]["todo_list"][id] !== "undefined"
     ) {
       const currentTodos = Object.assign({}, todos);
-      //console.log('여기까진 옴 ')
       currentTodos[today]["todo_list"][id]["completed"] =
         !currentTodos[today]["todo_list"][id]["completed"];
       setTodos[currentTodos];
@@ -163,13 +163,8 @@ const MyRoutineScreen = () => {
     setWeek(weekDays);
     //+ 이거 하면 다른날짜 렌더링할때 todo 안보임
     setTasks({});
-    if (
-      typeof todos[today] != "undefined"
-      // && todos[today]['title'].length != 0
-    ) {
+    if (typeof todos[today] != "undefined") {
       setTitle(todos[today]["title"]);
-      // console.log(todos[today]['title'].length)
-      //todo load
       loadToDos();
     } else {
       setTitle("");
@@ -178,9 +173,7 @@ const MyRoutineScreen = () => {
   }, [selectedDate, change]);
 
   const getWeekDays = (date) => {
-    //  console.log(date, 'datee')
     const start = startOfWeek(date, { weekStartsOn: 1 });
-    //  console.log(start)
     const weekOfLength = 7;
     const final = [];
     for (let i = 0; i < weekOfLength; i++) {
@@ -231,9 +224,7 @@ const MyRoutineScreen = () => {
       });
   };
 
-  {
-    /*날짜 변환 */
-  }
+  /*날짜 변환 */
   const month = selectedDate.toLocaleDateString("en-US", {
     month: "2-digit",
   });

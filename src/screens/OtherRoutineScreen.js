@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,38 +11,29 @@ import {
   Alert,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import TimePick from "../components/TimePick";
-import todos from "../../assets/data/todos";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import axios from "axios";
-function OtherRoutineScreen() {
-  const [fettodo, setFetchTodo] = useState(null);
 
+const OtherRoutineScreen = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const [fettodo, setFetchTodo] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const onDelete = () => {
-    Alert.alert("삭제됨");
-    axios
-      .delete(
-        `http://3.38.14.254/routine/delete?post_no=${route.params?.post_no}`
-      )
-      .then(function (response) {
-        // handle success
-        console.log(response);
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      })
-      .then(function () {
-        // always executed
-      });
-  };
+  const width = useWindowDimensions().width;
+  const height = useWindowDimensions().height;
 
-  const navigation = useNavigation();
-  const route = useRoute();
+  const [heart, addHeart] = useState(0);
+  const [scrap, addScrap] = useState(0);
+
+  const [scraped, setScraped] = useState(false);
+  const [hearted, setHearted] = useState(false);
+
+  const post_no = route.params.post_no;
+  const heartCount = route.params.heartCount;
+  const scrapCount = route.params.scrapCount;
 
   useEffect(() => {
     const fetching = async () => {
@@ -64,34 +55,41 @@ function OtherRoutineScreen() {
     fetching();
   }, []);
 
-  console.log(route.params?.post_no);
-  const width = useWindowDimensions().width;
-  const height = useWindowDimensions().height;
-
-  const [heartCount, addHeart] = useState(0);
-  const [scrapCount, addScrap] = useState(0);
-
-  const [scraped, setScraped] = useState(false);
-  const [hearted, setHearted] = useState(false);
-
   const letScrap = () => {
     setScraped(!scraped);
     if (scraped) {
-      addScrap(scrapCount++);
-      console.log("scrap: ", scrapCount);
+      addScrap(scrap++);
+      console.log("scrap: ", scrap);
     }
   };
 
   const letHeart = () => {
     setHearted(!hearted);
     if (hearted) {
-      addHeart(heartCount++);
-      console.log("heart: ", heartCount);
+      addHeart(heart++);
+      console.log("heart: ", heart);
     }
   };
 
   const goBack = () => {
     navigation.goBack();
+  };
+
+  const onDelete = () => {
+    Alert.alert("삭제됨");
+    axios
+      .delete(`http://3.38.14.254/routine/delete?post_no=${post_no}`)
+      .then(function (response) {
+        // handle success
+        console.log(response);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .then(function () {
+        // always executed
+      });
   };
 
   return (
@@ -174,7 +172,7 @@ function OtherRoutineScreen() {
       )}
     </LinearGradient>
   );
-}
+};
 const styles = StyleSheet.create({
   todo: {
     justifyContent: "center",

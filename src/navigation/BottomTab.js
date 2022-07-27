@@ -43,17 +43,17 @@ const MyPageStackNav = () => {
   );
 };
 
-const MyStack = createNativeStackNavigator();
-const MyStackNav = () => {
-  return (
-    <MyStack.Navigator screenOptions={{ headerShown: false }}>
-      <MyStack.Screen name="Home" component={HomeScreen} />
-      <MyStack.Screen name="new" component={NewScreen} />
-      <MyStack.Screen name="popular" component={PopularScreen} />
-      <MyStack.Screen name="Others" component={OtherRoutineScreen} />
-    </MyStack.Navigator>
-  );
-};
+// const MyStack = createNativeStackNavigator();
+// const MyStackNav = () => {
+//   return (
+//     <MyStack.Navigator screenOptions={{ headerShown: false }}>
+//       <MyStack.Screen name="Home" component={HomeScreen} />
+//       <MyStack.Screen name="new" component={NewScreen} />
+//       <MyStack.Screen name="popular" component={PopularScreen} />
+//       <MyStack.Screen name="Others" component={OtherRoutineScreen} />
+//     </MyStack.Navigator>
+//   );
+// };
 
 ///// 탑 탭
 const HomeTab = createMaterialTopTabNavigator();
@@ -100,6 +100,7 @@ const HomeTabNav = () => {
 };
 
 //// 제일 중심 스택
+const MyStack = createNativeStackNavigator();
 const MyHomeStack = createNativeStackNavigator();
 const MyHomeStackNav = () => {
   return (
@@ -120,9 +121,9 @@ const MyHomeStackNav = () => {
           title: "GOD[T] Morning",
         }}
       />
-      <MyHomeStack.Screen
-        name="MyStack"
-        component={MyStackNav}
+      <MyStack.Screen
+        name="Others"
+        component={OtherRoutineScreen}
         options={{ headerShown: false }}
       />
     </MyHomeStack.Navigator>

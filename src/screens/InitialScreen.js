@@ -1,33 +1,6 @@
 import { StyleSheet, Text, Pressable, Image, View } from "react-native";
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
-{
-  /*import {
-  KakaoOAuthToken,
-  KakaoProfile,
-  //getProfile as getKakaoProfile,
-  login,
-  logout,
-  unlink,
-} from "@react-native-seoul/kakao-login";
-const signInWithKakao = async () => {
-  const token = await login();
-  setResult(JSON.stringify(token));
-};
-const signOutWithKakao = async () => {
-  const message = await logout();
-  setResult(message);
-};
-const getKakaoProfile = async () => {
-  const profile = await getProfile();
-  setResult(JSON.stringify(profile));
-};
-const unlinkKakao = async () => {
-  const message = await unlink();
-  setResult(message);
-};
-*/
-}
 
 const InitialScreen = ({ navigation }) => {
   const login = () => {

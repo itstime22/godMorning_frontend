@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Pressable } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -11,7 +11,8 @@ const RoutineButton = ({ routine }) => {
   const Timezone1 = routine.startTime;
   const Timezone2 = routine.endTime;
   const Todo_list = routine.Todo_list;
-
+  const heartCount = routine.heartCount;
+  const scrapCount = routine.scrapCount;
   const toSeconds = (time) => {
     const parts = time.split(":");
 
@@ -43,14 +44,15 @@ const RoutineButton = ({ routine }) => {
   const post_no = routine.post_no;
 
   const goTodoPage = () => {
-    //  console.log(id)
-    navigation.navigate("Others", { post_no });
+    navigation.navigate("Others", {
+      heartCount: heartCount,
+      scrapCount: scrapCount,
+      post_no: post_no,
+    });
   };
-
   return (
     <Pressable style={styles.container} onPress={goTodoPage}>
       <LinearGradient
-        // Button Linear Gradient
         colors={[
           "#9DC0FF",
           "rgba(184, 181, 255, 0.97) ",
@@ -75,9 +77,8 @@ const RoutineButton = ({ routine }) => {
       </LinearGradient>
       <View>
         <Text style={styles.routineName}>{Title}</Text>
-
-        <Text style={styles.routineName}>🤍 100</Text>
-        <Text style={styles.routineName}>💚 100</Text>
+        <Text style={styles.routineName}>🤍 {heartCount}</Text>
+        <Text style={styles.routineName}>📌 {scrapCount}</Text>
       </View>
     </Pressable>
   );

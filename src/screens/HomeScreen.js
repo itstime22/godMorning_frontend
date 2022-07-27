@@ -18,7 +18,6 @@ function HomeScreen() {
   const navigation = useNavigation();
   const [fettodo, setFetchTodo] = useState(null);
   const [timeId, setTimeId] = useState(4);
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [flag, setFlag] = useState(false);
@@ -70,38 +69,6 @@ function HomeScreen() {
     return parseInt(Math.random() * length);
   };
 
-  useEffect(() => {
-    const fetching = async () => {
-      try {
-        // 요청이 시작 할 때에는 error 와 users 를 초기화하고
-        setError(null);
-        setFetchTodo(null);
-        // loading 상태를 true 로 바꿉니다.
-        setLoading(true);
-        const response = await axios.get("http://3.38.14.254/newRoutine/list");
-        setFetchTodo(response.data); // 데이터는 response.data 안에 들어있습니다.
-        //console.log(response.data)
-      } catch (e) {
-        setError(e);
-      }
-      setLoading(false);
-      setFlag(!flag);
-    };
-    fetching();
-  }, [isFocused]);
-
-  useEffect(() => {
-    fettodo !== null
-      ? setTimeTodos(
-          fettodo.filter(
-            (routine) =>
-              routine.startTime.charAt(0) == timeId ||
-              routine.startTime.substring(0, 2) == timeId
-          )
-        )
-      : console.log("아직");
-  }, [timeId, flag]);
-
   const timeTable = [
     { id: 4, title: "4시", isSelect: true },
     { id: 5, title: "5시", isSelect: false },
@@ -130,6 +97,38 @@ function HomeScreen() {
     });
     setTimes(newTable);
   };
+
+  useEffect(() => {
+    const fetching = async () => {
+      try {
+        // 요청이 시작 할 때에는 error 와 users 를 초기화하고
+        setError(null);
+        setFetchTodo(null);
+        // loading 상태를 true 로 바꿉니다.
+        setLoading(true);
+
+        const response = await axios.get("http://3.38.14.254/newRoutine/list");
+        setFetchTodo(response.data); // 데이터는 response.data 안에 들어있습니다.
+      } catch (e) {
+        setError(e);
+      }
+      setLoading(false);
+      setFlag(!flag);
+    };
+    fetching();
+  }, [isFocused]);
+
+  useEffect(() => {
+    fettodo !== null
+      ? setTimeTodos(
+          fettodo.filter(
+            (routine) =>
+              routine.startTime.charAt(0) == timeId ||
+              routine.startTime.substring(0, 2) == timeId
+          )
+        )
+      : console.log("home");
+  }, [timeId, flag]);
 
   return (
     <View style={styles.container}>
@@ -188,14 +187,14 @@ function HomeScreen() {
             <>
               <View style={styles.column1}>
                 {timeTodos
-                  .filter((routine, index) => index % 2 == 0)
+                  .filter((index) => index % 2 == 0)
                   .map((routine) => (
                     <RoutineButton routine={routine} key={routine.post_no} />
                   ))}
               </View>
               <View style={styles.column2}>
                 {timeTodos
-                  .filter((routine, index) => index % 2 == 1)
+                  .filter((index) => index % 2 == 1)
                   .map((routine) => (
                     <RoutineButton routine={routine} key={routine.post_no} />
                   ))}
