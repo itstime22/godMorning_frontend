@@ -20,7 +20,9 @@ import IconButton from "../components/IconButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
-function MineRoutineScreen() {
+const MineRoutineScreen = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
   const [fettodo, setFetchTodo] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -34,7 +36,7 @@ function MineRoutineScreen() {
         // loading 상태를 true 로 바꿉니다.
         setLoading(true);
         const response = await axios.get(
-          `http://3.38.14.254/newRoutine/list/${route.params?.post_no}`
+          `http://3.38.14.254/myRoutine/${route.params?.id}/${route.params?.post_no}`
         );
         setFetchTodo(response.data); // 데이터는 response.data 안에 들어있습니다
       } catch (e) {
@@ -48,8 +50,6 @@ function MineRoutineScreen() {
   const width = useWindowDimensions().width;
   const height = useWindowDimensions().height;
 
-  const navigation = useNavigation();
-  const route = useRoute();
   const TodoId = route.params?.id;
 
   const goBack = () => {
@@ -102,12 +102,6 @@ function MineRoutineScreen() {
                 source={require("../../assets/icons/outline_delete_black_24dp.png")}
               />
             </Pressable>
-
-            {/* <Button
-              onPress={onDelete}
-              style={{ width: 30, height: 15 }}
-              title=" 삭제 "
-            ></Button> */}
           </View>
 
           <View style={styles.userInfo}>
@@ -141,7 +135,7 @@ function MineRoutineScreen() {
       )}
     </LinearGradient>
   );
-}
+};
 
 const styles = StyleSheet.create({
   todo: {

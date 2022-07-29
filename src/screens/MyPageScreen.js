@@ -1,17 +1,43 @@
-import React from "react";
-import { Image, Text, StyleSheet, View, Pressable } from "react-native";
+import { useState, useEffect } from "react";
+import { Image, Text, StyleSheet, View, Pressable, Alert } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const MyPageScreen = ({ navigation }) => {
   const inset = useSafeAreaInsets();
 
   const onMinePressed = () => {
-    navigation.navigate("Mine");
+    navigation.navigate("Mine", { id: id });
   };
   const onScrapPressed = () => {
-    navigation.navigate("Scrap");
+    navigation.navigate("Scrap", { id: id });
   };
+  const loginPressed = () => {
+    Alert.alert("로그아웃 하시겠습니까?", [
+      {
+        text: "아니요",
+        onPress: () => navigation.goBack(),
+      },
+      { text: "예" },
+    ]);
+  };
+  const [id, setId] = useState("");
+  const [nickname, setNickname] = useState("");
+
+  const getData = async () => {
+    try {
+      const data = await AsyncStorage.getItem("@userData");
+      //return data !== null
+      const jsonObject = JSON.parse(data);
+      setNickname(jsonObject.map.nickname);
+      setId(jsonObject.map.id);
+      //: console.log("데이터 없음");
+    } catch (err) {
+      console.log("err");
+    }
+  };
+  getData();
 
   return (
     <View
@@ -29,7 +55,7 @@ const MyPageScreen = ({ navigation }) => {
         />
       </View>
       <View style={styles.first}>
-        <Text style={styles.title}>My Page</Text>
+        <Text style={styles.title}>마이 페이지</Text>
       </View>
       <View
         style={{
@@ -40,18 +66,18 @@ const MyPageScreen = ({ navigation }) => {
       />
       <View style={styles.profile}>
         <FontAwesome name="user" size={50} />
-        <Text style={styles.name}>OOO 님</Text>
+        <Text style={styles.name}>{nickname} 님</Text>
       </View>
 
       <View style={styles.second}>
-        <Text style={styles.menu}>나의 루틴</Text>
+        <Text style={styles.menu}>나의 루틴들</Text>
         <Pressable onPress={onMinePressed}>
           <FontAwesome name="chevron-right" size={23} style={styles.icon} />
         </Pressable>
       </View>
 
       <View style={styles.second}>
-        <Text style={styles.menu}>스크랩한 모닝 루틴</Text>
+        <Text style={styles.menu}>스크랩한 모닝 루틴들</Text>
         <Pressable onPress={onScrapPressed}>
           <FontAwesome name="chevron-right" size={23} style={styles.icon} />
         </Pressable>
@@ -69,8 +95,8 @@ const MyPageScreen = ({ navigation }) => {
 
       <Text
         style={{
-          fontSize: 20,
-          left: 30,
+          fontSize: 23,
+          left: 38,
           top: 20,
           fontFamily: "NanumSquareRoundB",
           marginBottom: 30,
@@ -80,7 +106,7 @@ const MyPageScreen = ({ navigation }) => {
       </Text>
       <View style={styles.second}>
         <Text style={styles.menu}>로그아웃</Text>
-        <Pressable>
+        <Pressable onPress={loginPressed}>
           <FontAwesome name="chevron-right" size={23} style={styles.icon} />
         </Pressable>
       </View>
@@ -110,8 +136,9 @@ const styles = StyleSheet.create({
   },
   profile: {
     flexDirection: "row",
-    //alignItems: "center",
-    margin: 30,
+    alignContent: "center",
+    marginLeft: 25,
+    margin: 35,
   },
   menu: {
     fontFamily: "NanumSquareRoundB",
@@ -119,9 +146,10 @@ const styles = StyleSheet.create({
   },
   name: {
     color: "black",
-    fontSize: 25,
+    fontSize: 28,
     fontFamily: "NanumSquareRoundB",
-    marginLeft: 20,
+    marginLeft: 18,
+    alignItems: "center",
     top: 10,
   },
   first: {
@@ -133,7 +161,7 @@ const styles = StyleSheet.create({
   second: {
     flexDirection: "row",
     padding: 20,
-
+    marginLeft: 10,
     alignItems: "center",
     justifyContent: "space-between",
   },

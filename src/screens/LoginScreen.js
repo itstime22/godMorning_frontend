@@ -54,7 +54,7 @@ const LoginScreen = ({ navigation }) => {
     //     });
     // };
 
-    await fetch("http://3.38.14.254/login", {
+    const response = await fetch("http://3.38.14.254/login", {
       method: "POST",
       body: JSON.stringify({
         password: password,
@@ -63,35 +63,54 @@ const LoginScreen = ({ navigation }) => {
       headers: {
         "Content-Type": "application/json",
       },
-    })
-      .then((response) => {
-        console.log(response.headers);
-      })
-      .then((response) => {
-        console.log(response);
-        //console.log(response.text)
-        // setLoading(false);
-        // console.log(response);
-        // console.log(response.ok);
-        // console.log(response.status);
-        // console.log(response.data.username);
-        if (!response) {
-          //AsyncStorage.setItem("username", response.data.username);
-          navigation.replace("BottomTab");
-        } else {
-          setErrortext(response.msg);
-          alert("이메일과 비밀번호를 다시 확인하세요.");
+    });
+    console.log(response.ok);
+    if (response.ok) {
+      console.log(response.headers);
+      AsyncStorage.setItem(
+        "@userData",
+        JSON.stringify(response.headers),
+        (err) => {
+          if (err) {
+            console.log("an error");
+            throw err;
+          }
+          console.log("success");
         }
-      })
-      .catch((error) => {
-        setLoading(false);
-        console.error(error);
+      ).catch((err) => {
+        console.log("2 an error");
       });
+      alert("Login Success!");
+      navigation.navigate("BottomTab");
+    } else {
+      alert("Login failed");
+    }
+    // .then((response) => {
+    //   console.log(response.headers);
+    //   alert("회원가입 성공");
+    // })
+    // .then((response) => {
+    //   console.log(response);
+    //   //console.log(response.text)
+    //   // setLoading(false);
+    //   // console.log(response);
+    //   // console.log(response.ok);
+    //   // console.log(response.status);
+    //   // console.log(response.data.username);
+    //   if (!response) {
+    //     //AsyncStorage.setItem("username", response.data.username);
+    //     navigation.replace("BottomTab");
+    //   } else {
+    //     setErrortext(response.msg);
+    //     alert("이메일과 비밀번호를 다시 확인하세요.");
+    //   }
+    // })
+    // .catch((error) => {
+    //   setLoading(false);
+    //   console.error(error);
+    // });
   };
 
-  const llogin = () => {
-    navigation.navigate("BottomTab");
-  };
   const goBack = () => {
     navigation.goBack();
   };
@@ -166,7 +185,7 @@ const LoginScreen = ({ navigation }) => {
           returnKeyType="next"
         />
 
-        <CustomButton onPress={llogin} text="Sign In" />
+        <CustomButton onPress={login} text="Sign In" />
       </View>
     </LinearGradient>
   );

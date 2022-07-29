@@ -43,15 +43,14 @@ const SignupScreen = ({ navigation }) => {
 
   const signUp = async () => {
     setErrortext("");
-    {
-      /*// alert 띄우기
-    if (!idChecking) {
-      alert("닉네임 중복검사를 해주세요.");
-    } else if (username == "" || password == "") {
+    // alert 띄우기
+    //if (!idChecking) {
+    //   alert("닉네임 중복검사를 해주세요.");
+    // }
+    if (username == "" || password == "") {
       alert("이메일과 비밀번호를 입력해주세요.");
     }
-  */
-    }
+
     setLoading(true);
 
     // var userData = {
@@ -84,11 +83,11 @@ const SignupScreen = ({ navigation }) => {
     if (response.ok) {
       //console.log(response.ok);
       setIsRegisterSuccess(true);
-      alert("Register Success");
+      alert("Register Success!");
     }
     const data = await response.json();
-    
-    console.log(data);
+    //console.log(data); // object {"nickname": "333",}
+
     // axios
     //   .post("http://3.38.14.254/join", {
     //     nickname: nickname,

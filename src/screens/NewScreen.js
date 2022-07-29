@@ -108,14 +108,14 @@ const NewScreen = () => {
         <ScrollView contentContainerStyle={styles.routine}>
           <View style={styles.column1}>
             {fettodo
-              .filter((item) => item.post_no % 2 == 0)
+              .filter((item) => item.post_no % 2 == 1)
               .map((routine) => (
                 <RoutineButton routine={routine} key={routine.post_no} />
               ))}
           </View>
           <View style={styles.column2}>
             {fettodo
-              .filter((item) => item.post_no % 2 == 1)
+              .filter((item) => item.post_no % 2 == 0)
               .map((routine) => (
                 <RoutineButton routine={routine} key={routine.post_no} />
               ))}
@@ -123,7 +123,10 @@ const NewScreen = () => {
         </ScrollView>
       ) : (
         <View style={{ justifyContent: "center", alignItems: "center" }}>
-          <Image source={Spinner} style={{ width: 100, height: 100 }} />
+          <Image
+            source={Spinner}
+            style={{ marginTop: 200, width: 100, height: 100 }}
+          />
         </View>
       )}
     </View>

@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import todos from "../../assets/data/todos";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import RoutineButton from "../components/RoutineButton";
 import closestIndexTo from "date-fns/fp/closestIndexTo/index";
@@ -106,9 +105,16 @@ function HomeScreen() {
         setFetchTodo(null);
         // loading 상태를 true 로 바꿉니다.
         setLoading(true);
-
         const response = await axios.get("http://3.38.14.254/newRoutine/list");
         setFetchTodo(response.data); // 데이터는 response.data 안에 들어있습니다.
+        setTimeTodos(
+          fettodo.filter(
+            (routine) =>
+              routine.startTime.charAt(0) == timeId ||
+              routine.startTime.substring(0, 2) == timeId
+          )
+        );
+        console.log(timeTodos);
       } catch (e) {
         setError(e);
       }
@@ -116,19 +122,7 @@ function HomeScreen() {
       setFlag(!flag);
     };
     fetching();
-  }, [isFocused]);
-
-  useEffect(() => {
-    fettodo !== null
-      ? setTimeTodos(
-          fettodo.filter(
-            (routine) =>
-              routine.startTime.charAt(0) == timeId ||
-              routine.startTime.substring(0, 2) == timeId
-          )
-        )
-      : console.log("home");
-  }, [timeId, flag]);
+  }, [timeId, isFocused]);
 
   return (
     <View style={styles.container}>
@@ -183,18 +177,18 @@ function HomeScreen() {
 
       <View style={styles.r_container}>
         <ScrollView contentContainerStyle={styles.routine}>
-          {fettodo !== null && timeTodos !== null ? (
+          {timeTodos !== null ? (
             <>
               <View style={styles.column1}>
                 {timeTodos
-                  .filter((index) => index % 2 == 0)
+                  .filter((item) => item.post_no % 2 == 0)
                   .map((routine) => (
                     <RoutineButton routine={routine} key={routine.post_no} />
                   ))}
               </View>
               <View style={styles.column2}>
                 {timeTodos
-                  .filter((index) => index % 2 == 1)
+                  .filter((item) => item.post_no % 2 == 1)
                   .map((routine) => (
                     <RoutineButton routine={routine} key={routine.post_no} />
                   ))}
@@ -202,7 +196,10 @@ function HomeScreen() {
             </>
           ) : (
             <View style={{ justifyContent: "center", alignItems: "center" }}>
-              <Image source={Spinner} style={{ width: 100, height: 100 }} />
+              <Image
+                source={Spinner}
+                style={{ marginTop: 200, width: 100, height: 100 }}
+              />
             </View>
           )}
         </ScrollView>

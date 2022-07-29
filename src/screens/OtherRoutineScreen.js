@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
-  Button,
   View,
   ScrollView,
   Dimensions,
+  
   TouchableOpacity,
   useWindowDimensions,
   Alert,
+  Pressable,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -30,10 +31,6 @@ const OtherRoutineScreen = () => {
 
   const [scraped, setScraped] = useState(false);
   const [hearted, setHearted] = useState(false);
-
-  const post_no = route.params.post_no;
-  const heartCount = route.params.heartCount;
-  const scrapCount = route.params.scrapCount;
 
   useEffect(() => {
     const fetching = async () => {
@@ -91,7 +88,7 @@ const OtherRoutineScreen = () => {
         // always executed
       });
   };
-
+  console.log(fettodo);
   return (
     <LinearGradient
       colors={[
@@ -121,16 +118,33 @@ const OtherRoutineScreen = () => {
               )}
             </TouchableOpacity>
           </View>
-
           <View style={styles.userInfo}>
-            <View style={{ flexDirection: "row" }}>
+            <View style={{ flexDirection: "row", alignContent: "center" }}>
               <FontAwesome name="user" size={30} />
-              <Text style={styles.user}>게시자</Text>
-              <Button
+              <Text style={styles.user}>{fettodo["nickname"]}</Text>
+
+              <Pressable
                 onPress={onDelete}
-                style={{ width: 30, height: 15 }}
-                title=" 삭제 "
-              ></Button>
+                style={{
+                  height: 25,
+                  width: 40,
+                  borderRadius: 5,
+                  backgroundColor: "#FFFFFF",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginLeft: 10,
+                }}
+              >
+                <Text
+                  style={{
+                    color: "#545454",
+                    fontSize: 15,
+                    fontFamily: "NanumSquareRoundB",
+                  }}
+                >
+                  삭제
+                </Text>
+              </Pressable>
             </View>
 
             <View style={styles.timePick}>
@@ -158,7 +172,6 @@ const OtherRoutineScreen = () => {
               </TouchableOpacity>
             </View>
           </View>
-
           <ScrollView>
             {Object.values(fettodo["todo_list"]).map((id, index) => (
               <View style={styles.todocontainer} key={index}>
@@ -200,7 +213,7 @@ const styles = StyleSheet.create({
     fontFamily: "NanumSquareRoundR",
   },
   content: { fontSize: 17, fontFamily: "Cafe24Ohsquareair" },
-  title: { fontSize: 35, fontFamily: "NanumSquareRoundB" },
+  title: { fontSize: 30, fontFamily: "NanumSquareRoundB" },
 
   userInfo: {
     paddingHorizontal: 40,

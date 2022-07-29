@@ -1,19 +1,11 @@
 import { StatusBar } from "expo-status-bar";
 import { useState, useEffect } from "react";
 import React from "react";
-import {
-  parseISO,
-  isSameDay,
-  addDays,
-  format,
-  getDate,
-  startOfWeek,
-} from "date-fns";
+import { isSameDay, addDays, format, getDate, startOfWeek } from "date-fns";
 import {
   StyleSheet,
   Text,
   View,
-  Button,
   ScrollView,
   Dimensions,
   Alert,
@@ -24,12 +16,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import Input from "../components/Input";
 import Title from "../components/Title";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-//import WeekCalender from '../components/WeekCalender'
-//import { images } from '../../assets/icons/images'
 import Task from "../components/Task";
 import TimePick from "../components/TimePick";
-import * as Font from "expo-font";
-import AppLoading from "expo-app-loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
@@ -37,17 +25,8 @@ const STORAGE_KEY = "@toDos";
 const MyRoutineScreen = () => {
   const [newTask, setNewTask] = useState("");
   const [tasks, setTasks] = useState({});
-  const [isReady, setIsReady] = useState(false);
   const [todos, setTodos] = useState({});
-
   const [title, setTitle] = useState("");
-
-  const getFonts = async () => {
-    await Font.loadAsync({
-      NanumSquareRoundB: require("../../assets/fonts/NanumSquareRoundB.ttf"),
-      Cafe24Ohsquareair: require("../../assets/fonts/Cafe24Ohsquareair.ttf"),
-    });
-  };
 
   {
     /*Date*/
@@ -67,19 +46,45 @@ const MyRoutineScreen = () => {
     hideDatePicker();
   };
 
-  function printDate() {
-    const today = selectedDate; // 현재 날짜
+  function printDate(date) {
+    const today = selectedDate;
 
-    const month = today.toLocaleDateString("en-US", {
-      month: "2-digit",
-    });
-    const day = today.toLocaleDateString("en-US", {
-      day: "2-digit",
-    });
-    const dayName = today.toLocaleDateString("ko-KR", {
-      weekday: "long",
-    });
-    return `${month}`;
+    var dayOfWeek = [
+        "월요일",
+        "화요일",
+        "수요일",
+        "목요일",
+        "금요일",
+        "토요일",
+        "일요일",
+      ],
+      monthName = [
+        "1/",
+        "2/",
+        "3/",
+        "4/",
+        "5/",
+        "6/",
+        "7/",
+        "8/",
+        "9/",
+        "10/",
+        "11/",
+        "12/",
+      ],
+      utc = today.getTime() + today.getTimezoneOffset() * 60000,
+      US_time = utc + 3600000 * -4,
+      US_date = new Date(US_time);
+
+    return (
+      "✨ "+
+      monthName[US_date.getMonth()] +
+      " " +
+      US_date.getDate() +
+      " " +
+      dayOfWeek[US_date.getDay() - 1] +
+      " ✨"
+    );
   }
 
   const [hoursRange, setHoursRange] = useState({
@@ -225,13 +230,14 @@ const MyRoutineScreen = () => {
   };
 
   /*날짜 변환 */
-  const month = selectedDate.toLocaleDateString("en-US", {
+  const month = selectedDate.toLocaleDateString("ko-KR", {
     month: "2-digit",
   });
   const day = selectedDate.toLocaleDateString("en-US", {
     day: "2-digit",
   });
   const today = `${month}.${day}`;
+  //console.log(today);
 
   const onSave = async () => {
     Alert.alert("Save");
@@ -304,9 +310,9 @@ const MyRoutineScreen = () => {
         <Text
           onPress={showDatePicker}
           style={{
-            fontSize: 24,
+            fontSize: 25,
             fontWeight: "600",
-            fontFamily: "Cafe24Ohsquareair",
+            fontFamily: "NanumSquareRoundB",
           }}
         >
           {selectedDate ? printDate() : "No date selected"}
@@ -355,7 +361,7 @@ const MyRoutineScreen = () => {
           <Pressable style={styles.btn} onPress={onSave}>
             <Text style={{ color: "#545454", fontWeight: "500" }}>Save</Text>
           </Pressable>
-          <Pressable style={styles.btn} onPress={onPost}>
+          <Pressable style={styles.btn2} onPress={onPost}>
             <Text style={{ color: "#545454", fontWeight: "500" }}>Post</Text>
           </Pressable>
         </View>
@@ -442,6 +448,7 @@ const styles = StyleSheet.create({
   datepicker: {
     justifyContent: "center",
     alignItems: "center",
+    marginBottom: 20,
   },
   weekpicker: {
     justifyContent: "space-evenly",
@@ -504,11 +511,11 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   post_save_container: {
-    podsition: "absoulte",
-    bottom: 5,
+    //position: "absoulte",
+    marginTop:-5,
     paddingVertical: 5,
     width: "100%",
-    marginLeft: 200,
+    marginLeft: 230,
     flexDirection: "row",
   },
   btn: {
@@ -521,6 +528,18 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     //elevation: 3,
     backgroundColor: "#EEEEEE",
+  },
+  btn2: {
+    alignItems: "center",
+    justifyContent: "center",
+    //paddingVertical: 12,
+    //paddingHorizontal: 32,
+    width: 70,
+    height: 30,
+    borderRadius: 5,
+    //elevation: 3,
+    backgroundColor: "#EEEEEE",
+    marginLeft: 10,
   },
 });
 

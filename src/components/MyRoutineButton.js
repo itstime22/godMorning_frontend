@@ -1,11 +1,9 @@
 import { StyleSheet, Text, View, Pressable } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 
 const MyRoutineButton = ({ routine }) => {
-  //한사람의 todos 전체받기
-  /*new*/
   const navigation = useNavigation();
   const Title = routine.title;
   const Timezone1 = routine.startTime;
@@ -41,10 +39,15 @@ const MyRoutineButton = ({ routine }) => {
   };
 
   const post_no = routine.post_no;
-
+  const heartCount = routine.heartCount;
+  const scrapCount = routine.scrapCount;
   const goTodoPage = () => {
     //  console.log(id)
-    navigation.navigate("Mines", { post_no });
+    navigation.navigate("Mines", {
+      heartCount: heartCount,
+      scrapCount: scrapCount,
+      post_no: post_no,
+    });
   };
 
   return (
@@ -74,9 +77,9 @@ const MyRoutineButton = ({ routine }) => {
         </View>
       </LinearGradient>
       <View>
-        <Text style={styles.routineName}>{Title}</Text>
-        <Text style={styles.routineName}>🤍 100</Text>
-        <Text style={styles.routineName}>💚 100</Text>
+        <Text style={styles.routineName}>{routine.title}</Text>
+        <Text style={styles.routineName}>🤍 {heartCount}</Text>
+        <Text style={styles.routineName}>📌 {scrapCount}</Text>
       </View>
     </Pressable>
   );
