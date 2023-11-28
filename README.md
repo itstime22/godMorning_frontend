@@ -2,6 +2,7 @@
 ### 본인의 모닝 루틴을 작성하여 공유하고, 다양한 기상 시간대의 루틴을 참고하여 나에게 맞는 최적의 모닝 루틴을 만들 수 있는 앱
 
 <p align="center">
+<image src="https://github.com/lotuxsoo/godMorning_frontend/assets/86272865/99a7ddc5-0926-4147-97d1-4bbe6e89d622" width="250" height="500"/>
 <image src="https://github.com/lotuxsoo/godMorning_frontend/assets/86272865/1644140a-3fcb-46dc-a8f5-73fbf32a9c7d" width="250" height="500"/>
 <image src="https://github.com/lotuxsoo/godMorning_frontend/assets/86272865/5b430728-9538-47ff-a121-d962fd183309" width="250" height="500"/>
 </p>
