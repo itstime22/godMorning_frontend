@@ -1,5 +1,5 @@
 # ☀️ God Morning
-본인만의 모닝 루틴을 작성하여 공유하고, 다양한 기상 시간대에 존재하는 사람들의 아침 루틴을 참고하여 본인에게 맞는 최적의 모닝 루틴을 만드는 애플리케이션
+본인만의 모닝 루틴을 작성하여 공유하고, 다양한 기상 시간대에 존재하는 사람들의 루틴을 참고하여 본인에게 맞는 최적의 모닝 루틴을 만드는 애플리케이션
 
 <p align="center">
 <image src="https://github.com/lotuxsoo/godMorning_frontend/assets/86272865/3d534c62-5128-42a8-b969-ae2be1de2c72" width="500"/>
